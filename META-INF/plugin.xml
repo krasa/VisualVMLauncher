@@ -1,0 +1,45 @@
+<idea-plugin version="2">
+	<id>VisualVMLauncher</id>
+	<name>VisualVM Launcher</name>
+	<version>0.1</version>
+
+	<vendor url="" email="vojta.krasa@gmail.com">Vojtech
+		Krasa
+	</vendor>
+
+	<description><![CDATA[
+     Launches VisualVM along with runned application.
+      ]]></description>
+
+	<change-notes><![CDATA[
+        <br>0.1 (2012-11-04)
+        <br>- Initial release
+        <br>
+      ]]>
+	</change-notes>
+
+	<idea-version since-build="110.137" until-build=""/>
+
+	<application-components>
+		<component>
+			<implementation-class>krasa.visualvm.ApplicationSettingsComponent</implementation-class>
+		</component>
+	</application-components>
+
+	<project-components>
+		<!-- Add your project components here -->
+	</project-components>
+
+	<actions>
+		<!-- Add your actions here -->
+	</actions>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<executor implementation="krasa.visualvm.runner.RunVisualVMExecutor"/>
+		<programRunner implementation="krasa.visualvm.runner.RunVisualVMRunner"/>
+		<programRunner implementation="krasa.visualvm.runner.DebugVisualVMRunner"/>
+		<executor implementation="krasa.visualvm.runner.DebugVisualVMExecutor"/>
+	</extensions>
+
+
+</idea-plugin>
