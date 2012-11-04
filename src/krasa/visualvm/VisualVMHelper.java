@@ -24,9 +24,6 @@
  */
 package krasa.visualvm;
 
-import krasa.visualvm.ApplicationSettingsComponent;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+import org.jetbrains.annotations.NotNull;
 
 public final class VisualVMHelper {
 	private static class SpecVersion {
@@ -57,10 +55,12 @@ public final class VisualVMHelper {
 	public static String[] getJvmArgs(long id) {
 		return new String[] { "-Dvisualvm.id=" + id };
 	}
-    @NotNull
-     public static String getVisualVmHome() {
-        return ApplicationSettingsComponent.getInstance().getVisualVmHome();
-     }
+
+	@NotNull
+	public static String getVisualVmHome() {
+		return ApplicationSettingsComponent.getInstance().getVisualVmHome();
+	}
+
 	public static void openInVisualVM(long id, String visualVmPath, String jdkHome) throws IOException {
 		SpecVersion sv = getJavaVersion(jdkHome);
 		if (sv == null || (sv.major == 1 && sv.minor < 6)) {

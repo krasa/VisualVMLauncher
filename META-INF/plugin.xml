@@ -3,7 +3,7 @@
 	<name>VisualVM Launcher</name>
 	<version>0.1</version>
 
-	<vendor url="" email="vojta.krasa@gmail.com">Vojtech
+	<vendor url="https://github.com/krasa/VisualVMLauncherIntellijPlugin" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
 	</vendor>
 

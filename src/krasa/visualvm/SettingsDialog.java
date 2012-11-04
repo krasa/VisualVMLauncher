@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import krasa.visualvm.PluginSettings;
 import org.jetbrains.annotations.NotNull;
 
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -15,19 +14,19 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 public class SettingsDialog {
-    private JTextField visualVmExecutable;
-    private JComponent rootComponent;
-    private JButton browseButton;
+	private JTextField visualVmExecutable;
+	private JComponent rootComponent;
+	private JButton browseButton;
 
-    public SettingsDialog() {
-        browseButton.addActionListener(new ActionListener() {
+	public SettingsDialog() {
+		browseButton.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                browseForFile(visualVmExecutable);
-            }
-        });
-    }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				browseForFile(visualVmExecutable);
+			}
+		});
+	}
 
 	private void browseForFile(@NotNull final JTextField target) {
 		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
@@ -61,17 +60,17 @@ public class SettingsDialog {
 		return false;
 	}
 
-    public JComponent getRootComponent() {
-        return rootComponent;
-    }
+	public JComponent getRootComponent() {
+		return rootComponent;
+	}
 
-    public PluginSettings exportDisplayedSettings() {
-        PluginSettings pluginSettings = new PluginSettings();
-        pluginSettings.setVisualVmExecutable(visualVmExecutable.getText());
-        return pluginSettings;
-    }
+	public PluginSettings exportDisplayedSettings() {
+		PluginSettings pluginSettings = new PluginSettings();
+		pluginSettings.setVisualVmExecutable(visualVmExecutable.getText());
+		return pluginSettings;
+	}
 
-    public void importFrom(PluginSettings settings) {
-        visualVmExecutable.setText(settings.getVisualVmExecutable());
-    }
+	public void importFrom(PluginSettings settings) {
+		visualVmExecutable.setText(settings.getVisualVmExecutable());
+	}
 }
