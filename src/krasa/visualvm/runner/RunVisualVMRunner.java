@@ -57,7 +57,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	@Override
 	public void execute(@NotNull Executor executor, @NotNull ExecutionEnvironment environment)
 			throws ExecutionException {
-		boolean b = ApplicationSettingsComponent.openSettingsIfNotConfigured(environment);
+		boolean b = ApplicationSettingsComponent.openSettingsIfNotConfigured(environment.getProject());
 		if (!b) {
 			return;
 		}

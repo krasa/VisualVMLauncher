@@ -2,12 +2,12 @@ package krasa.visualvm;
 
 import javax.swing.*;
 
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -30,12 +30,12 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 		return ApplicationManager.getApplication().getComponent(ApplicationSettingsComponent.class);
 	}
 
-	public static boolean openSettingsIfNotConfigured(ExecutionEnvironment environment) {
+	public static boolean openSettingsIfNotConfigured(Project project) {
 		ApplicationSettingsComponent instance = getInstance();
 		PluginSettings state = instance.getState();
 		boolean b = true;
 		if (state == null || state.getVisualVmExecutable() == null || state.getVisualVmExecutable().isEmpty()) {
-			b = ShowSettingsUtil.getInstance().editConfigurable(environment.getProject(), instance);
+			b = ShowSettingsUtil.getInstance().editConfigurable(project, instance);
 		}
 		return b;
 	}
