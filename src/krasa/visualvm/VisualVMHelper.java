@@ -34,6 +34,24 @@ import java.util.StringTokenizer;
 import org.jetbrains.annotations.NotNull;
 
 public final class VisualVMHelper {
+
+	public static void startVisualVM() {
+		VisualVMContext context = VisualVMContext.load();
+		Long appId = context.getAppId();
+		String jdkPath = context.getJdkPath();
+		startVisualVM(appId, jdkPath);
+	}
+
+	public static void startVisualVM(long appId, String jdkHome) {
+		String visualVmHome = getVisualVmHome();
+		String debug = "appId=" + appId + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
+		try {
+            VisualVMHelper.openInVisualVM(appId, visualVmHome, jdkHome);
+		} catch (IOException e) {
+			throw new RuntimeException(debug, e);
+		}
+	}
+
 	private static class SpecVersion {
 		int major, minor;
 
@@ -46,7 +64,17 @@ public final class VisualVMHelper {
 				minor = Integer.parseInt(st.nextToken());
 			}
 		}
-	}
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("SpecVersion");
+            sb.append("{major=").append(major);
+            sb.append(", minor=").append(minor);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
 
 	public static long getNextID() {
 		return System.nanoTime();
@@ -62,12 +90,6 @@ public final class VisualVMHelper {
 	}
 
 	public static void openInVisualVM(long id, String visualVmPath, String jdkHome) throws IOException {
-		SpecVersion sv = getJavaVersion(jdkHome);
-		if (sv == null || (sv.major == 1 && sv.minor < 6)) {
-			throw new RuntimeException(
-					"VisualVM requires JDK1.6+ to run. You are trying to launch VisualVM using an unsupported JDK.\n\nUse 'Window\\Preferences\\Run/Debug\\Launching\\VisualVM Configuration' to set the VisualVM JDK_HOME.");
-		}
-
 		Runtime.getRuntime().exec(new String[] { visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id) });
 	}
 

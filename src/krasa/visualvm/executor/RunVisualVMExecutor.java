@@ -1,18 +1,17 @@
-package krasa.visualvm.runner;
+package krasa.visualvm.executor;
 
 import javax.swing.*;
 
 import krasa.visualvm.Resources;
 
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import com.intellij.execution.executors.DefaultRunExecutor;
 
-public class DebugVisualVMExecutor extends DefaultRunExecutor {
-	@NonNls
-	public static final String EXECUTOR_ID = "Debug with VisualVM";
-	public static final String DEBUG_WITH_VISUAL_VM = "DebugWithVisualVM";
+public class RunVisualVMExecutor extends DefaultRunExecutor {
+
+	public static final String RUN_WITH_VISUAL_VM = "Run with VisualVM";
+	public static final String RUN_WITH_VISUAL_VM1 = "RunWithVisualVM";
 
 	@NotNull
 	public String getToolWindowId() {
@@ -25,7 +24,7 @@ public class DebugVisualVMExecutor extends DefaultRunExecutor {
 
 	@NotNull
 	public Icon getIcon() {
-		return Resources.DEBUG;
+		return Resources.RUN;
 	}
 
 	public Icon getDisabledIcon() {
@@ -33,22 +32,22 @@ public class DebugVisualVMExecutor extends DefaultRunExecutor {
 	}
 
 	public String getDescription() {
-		return EXECUTOR_ID;
+		return RUN_WITH_VISUAL_VM;
 	}
 
 	@NotNull
 	public String getActionName() {
-		return DEBUG_WITH_VISUAL_VM;
+		return RUN_WITH_VISUAL_VM1;
 	}
 
 	@NotNull
 	public String getId() {
-		return EXECUTOR_ID;
+		return RUN_WITH_VISUAL_VM;
 	}
 
 	@NotNull
 	public String getStartActionText() {
-		return EXECUTOR_ID;
+		return RUN_WITH_VISUAL_VM;
 	}
 
 	public String getContextActionId() {
@@ -59,5 +58,4 @@ public class DebugVisualVMExecutor extends DefaultRunExecutor {
 	public String getHelpId() {
 		return null;
 	}
-
 }

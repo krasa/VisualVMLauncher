@@ -1,18 +1,22 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>0.1</version>
+	<version>0.2</version>
 
-	<vendor url="https://github.com/krasa/VisualVMLauncherIntellijPlugin" email="vojta.krasa@gmail.com">Vojtech
+	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
 	</vendor>
 
 	<description><![CDATA[
-     Launches VisualVM along with runned application.
+     Launches VisualVM from within IDEA. <br/>
+     Use buttons from main toolbar to start VisualVM along with executed application, 
+     or button next to the console window of already started application.
       ]]></description>
 
 	<change-notes><![CDATA[
-        <br>0.1 (2012-11-04)
+        <br>0.2 (2012-11-10)
+        <br>- New button  next to the` console window
+        <br>0.1 (2012-11-05)
         <br>- Initial release
         <br>
       ]]>
@@ -35,11 +39,14 @@
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<executor implementation="krasa.visualvm.runner.RunVisualVMExecutor"/>
+		<executor implementation="krasa.visualvm.executor.RunVisualVMExecutor"/>
 		<programRunner implementation="krasa.visualvm.runner.RunVisualVMRunner"/>
 		<programRunner implementation="krasa.visualvm.runner.DebugVisualVMRunner"/>
-		<executor implementation="krasa.visualvm.runner.DebugVisualVMExecutor"/>
+		<executor implementation="krasa.visualvm.executor.DebugVisualVMExecutor"/>
+		<java.programPatcher implementation="krasa.visualvm.VisualVMJavaProgramPatcher"/>
+		<consoleActionsPostProcessor implementation="krasa.visualvm.VisualVMConsoleActionsPostProcessor"/>
 	</extensions>
+
 
 
 </idea-plugin>

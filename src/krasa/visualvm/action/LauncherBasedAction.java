@@ -1,4 +1,4 @@
-package krasa.visualvm.runner;
+package krasa.visualvm.action;
 
 import javax.swing.*;
 

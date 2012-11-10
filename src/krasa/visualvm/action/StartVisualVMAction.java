@@ -1,8 +1,5 @@
-package krasa.visualvm.runner;
+package krasa.visualvm.action;
 
-import java.io.IOException;
-
-import krasa.visualvm.ApplicationSettingsComponent;
 import krasa.visualvm.Resources;
 import krasa.visualvm.VisualVMHelper;
 
@@ -16,25 +13,17 @@ public class StartVisualVMAction extends LauncherBasedAction {
 	protected final long appId;
 	protected String jdkHome;
 
-	public StartVisualVMAction(final ProcessHandler processHandler, long appId, String jdkHome1) {
-		super("StartVisualVM", null, Resources.RUN, processHandler);
+	public StartVisualVMAction(final ProcessHandler processHandler, long appId, String jdkHome) {
+		super("Start VisualVM", null, Resources.RUN, processHandler);
 		this.appId = appId;
-		this.jdkHome = jdkHome1;
+		this.jdkHome = jdkHome;
 	}
 
 	@Override
 	public void actionPerformed(final AnActionEvent e) {
 		ProcessProxy proxy = ProcessProxyFactory.getInstance().getAttachedProxy(myProcessHandler);
 		if (proxy != null) {
-			startVisualVM();
-		}
-	}
-
-	protected void startVisualVM() {
-		try {
-			VisualVMHelper.openInVisualVM(appId, ApplicationSettingsComponent.getInstance().getVisualVmHome(), jdkHome);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+			VisualVMHelper.startVisualVM(appId, jdkHome);
 		}
 	}
 }
