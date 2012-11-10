@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>0.2</version>
+	<version>0.3</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,8 +14,10 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>0.3 (2012-11-11)
+        <br>- fixed console buttons
         <br>0.2 (2012-11-10)
-        <br>- New button  next to the console window
+        <br>- New button next to the console window
         <br>0.1 (2012-11-05)
         <br>- Initial release
         <br>

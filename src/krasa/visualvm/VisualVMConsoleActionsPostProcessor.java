@@ -1,6 +1,7 @@
 package krasa.visualvm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import krasa.visualvm.action.StartVisualVMConsoleAction;
 
@@ -19,7 +20,8 @@ public class VisualVMConsoleActionsPostProcessor implements ConsoleActionsPostPr
 		if (VisualVMContext.isValid(context)) {
 			ArrayList<AnAction> anActions = new ArrayList<AnAction>();
 			anActions.add(new StartVisualVMConsoleAction(context));
-			return anActions.toArray(new AnAction[anActions.size()]);
+            anActions.addAll(Arrays.asList(actions));
+            return anActions.toArray(new AnAction[anActions.size()]);
 		}
 		return actions;
 	}
