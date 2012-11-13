@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.NotNull;
 
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -29,7 +31,7 @@ public class SettingsDialog {
 	}
 
 	private void browseForFile(@NotNull final JTextField target) {
-		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
+		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
 		descriptor.setHideIgnored(true);
 
 		descriptor.setTitle("Select VisualVM home");
@@ -38,7 +40,8 @@ public class SettingsDialog {
 				: LocalFileSystem.getInstance().findFileByPath(text);
 
 		// 10.5 does not have #chooseFile
-		VirtualFile[] virtualFile = FileChooser.chooseFiles(descriptor, null, toSelect);
+        Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+        VirtualFile[] virtualFile = FileChooser.chooseFiles(defaultProject, descriptor, toSelect);
 		if (virtualFile != null && virtualFile.length > 0) {
 			target.setText(virtualFile[0].getPath());
 		}
@@ -62,15 +65,5 @@ public class SettingsDialog {
 
 	public JComponent getRootComponent() {
 		return rootComponent;
-	}
-
-	public PluginSettings exportDisplayedSettings() {
-		PluginSettings pluginSettings = new PluginSettings();
-		pluginSettings.setVisualVmExecutable(visualVmExecutable.getText());
-		return pluginSettings;
-	}
-
-	public void importFrom(PluginSettings settings) {
-		visualVmExecutable.setText(settings.getVisualVmExecutable());
 	}
 }

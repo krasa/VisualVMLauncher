@@ -84,18 +84,18 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 	}
 
 	public boolean isModified() {
-		return getForm().isModified(settings);
+		return form.isModified(settings);
 	}
 
 	public void apply() throws ConfigurationException {
 		if (form != null) {
-			settings = form.exportDisplayedSettings();
+			 form.getData(settings);
 		}
 	}
 
 	public void reset() {
 		if (form != null) {
-			form.importFrom(settings);
+			form.setData(settings);
 		}
 	}
 

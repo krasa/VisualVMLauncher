@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>0.3</version>
+	<version>0.4</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>0.4 (2012-11-13)
+        <br>- fixed file chooser for IJ 11
         <br>0.3 (2012-11-11)
         <br>- fixed console buttons
         <br>0.2 (2012-11-10)
