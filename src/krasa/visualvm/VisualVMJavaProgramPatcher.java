@@ -4,6 +4,7 @@ import com.intellij.execution.CantRunException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.JavaProgramPatcher;
 
 public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {

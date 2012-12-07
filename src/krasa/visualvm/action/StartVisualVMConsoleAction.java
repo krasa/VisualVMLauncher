@@ -29,8 +29,7 @@ public class StartVisualVMConsoleAction extends AnAction {
 
 	@Override
 	public void actionPerformed(final AnActionEvent e) {
-		boolean b = ApplicationSettingsComponent.openSettingsIfNotConfigured(e.getProject());
-		if (!b) {
+		if (!ApplicationSettingsComponent.openSettingsIfNotConfigured(e.getProject())) {
 			return;
 		}
 		VisualVMHelper.startVisualVM(visualVMContext.getAppId(), visualVMContext.getJdkPath());

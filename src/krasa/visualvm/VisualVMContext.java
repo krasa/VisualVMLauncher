@@ -1,7 +1,13 @@
 package krasa.visualvm;
 
+import org.apache.commons.lang.StringUtils;
+
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
+/*dirty, but works*/
 public class VisualVMContext {
-	private static VisualVMContext actuallyExecuted;
+	private static VisualVMContext currentlyExecuted;
 
 	protected Long appId;
 	protected String jdkPath;
@@ -20,14 +26,14 @@ public class VisualVMContext {
 	}
 
 	public void save() {
-		VisualVMContext.actuallyExecuted = this;
+		VisualVMContext.currentlyExecuted = this;
 	}
 
 	public static VisualVMContext load() {
-		return actuallyExecuted;
+		return currentlyExecuted;
 	}
 
 	public static boolean isValid(VisualVMContext visualVMContext) {
-		return visualVMContext != null && visualVMContext.getJdkPath() != null && visualVMContext.getAppId() != null;
+		return visualVMContext != null && isNotBlank(visualVMContext.getJdkPath()) && visualVMContext.getAppId() != null;
 	}
 }

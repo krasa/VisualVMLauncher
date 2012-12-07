@@ -33,11 +33,11 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 	public static boolean openSettingsIfNotConfigured(Project project) {
 		ApplicationSettingsComponent instance = getInstance();
 		PluginSettings state = instance.getState();
-		boolean b = true;
-		if (state == null || state.getVisualVmExecutable() == null || state.getVisualVmExecutable().isEmpty()) {
-			b = ShowSettingsUtil.getInstance().editConfigurable(project, instance);
+		boolean ok = true;
+		if (!PluginSettings.isValid(state)) {
+			ok = ShowSettingsUtil.getInstance().editConfigurable(project, instance);
 		}
-		return b;
+		return ok;
 	}
 
 	public String getVisualVmHome() {
