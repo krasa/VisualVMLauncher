@@ -1,13 +1,13 @@
 package krasa.visualvm;
 
-import org.apache.commons.lang.StringUtils;
-
-import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
+
+import com.intellij.openapi.diagnostic.Logger;
 
 /*dirty, but works*/
 public class VisualVMContext {
-	private static VisualVMContext currentlyExecuted;
+	private static final Logger log = Logger.getInstance(VisualVMContext.class.getName());
+	private static volatile VisualVMContext currentlyExecuted;
 
 	protected Long appId;
 	protected String jdkPath;
@@ -26,6 +26,7 @@ public class VisualVMContext {
 	}
 
 	public void save() {
+		log.info("saving context: " + this.toString());
 		VisualVMContext.currentlyExecuted = this;
 	}
 
@@ -34,6 +35,17 @@ public class VisualVMContext {
 	}
 
 	public static boolean isValid(VisualVMContext visualVMContext) {
-		return visualVMContext != null && isNotBlank(visualVMContext.getJdkPath()) && visualVMContext.getAppId() != null;
+		return visualVMContext != null && isNotBlank(visualVMContext.getJdkPath())
+				&& visualVMContext.getAppId() != null;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("VisualVMContext");
+		sb.append("{appId=").append(appId);
+		sb.append(", jdkPath='").append(jdkPath).append('\'');
+		sb.append('}');
+		return sb.toString();
 	}
 }

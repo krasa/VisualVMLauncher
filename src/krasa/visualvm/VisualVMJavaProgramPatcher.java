@@ -6,16 +6,10 @@ import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.JavaProgramPatcher;
+import com.intellij.openapi.diagnostic.Logger;
 
 public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
-
-	public static long patchJavaParameters(JavaParameters javaParameters) {
-		Long appId = VisualVMHelper.getNextID();
-		for (String arg : VisualVMHelper.getJvmArgs(appId)) {
-			javaParameters.getVMParametersList().prepend(arg);
-		}
-		return appId;
-	}
+	private static final Logger log = Logger.getInstance(VisualVMJavaProgramPatcher.class.getName());
 
 	@Override
 	public void patchJavaParameters(Executor executor, RunProfile configuration, JavaParameters javaParameters) {
@@ -23,13 +17,15 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 			String jdkPath = javaParameters.getJdkPath();
 			Long appId = VisualVMHelper.getNextID();
 
+			log.info("Patching: jdkPath="+jdkPath+"; appId="+appId);
 			for (String arg : VisualVMHelper.getJvmArgs(appId)) {
 				javaParameters.getVMParametersList().prepend(arg);
 			}
 
 			new VisualVMContext(appId, jdkPath).save();
 		} catch (CantRunException e) {
-			e.printStackTrace();
+			log.error(e);
+			throw new RuntimeException(e);
 		}
 	}
 

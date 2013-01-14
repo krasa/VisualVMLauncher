@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>0.4.1</version>
+	<version>0.5</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>0.5 (2013-01-14)
+        <br>- validations and logging
         <br>0.4.1 (2012-12-03)
         <br>- recompiled with java 1.6
         <br>0.4 (2012-11-13)

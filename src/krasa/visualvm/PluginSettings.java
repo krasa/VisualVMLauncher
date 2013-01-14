@@ -2,6 +2,8 @@ package krasa.visualvm;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
+
 public class PluginSettings {
 
 	private String visualVmExecutable;
@@ -16,7 +18,7 @@ public class PluginSettings {
 
 	public static boolean isValid(PluginSettings state) {
 		boolean result = true;
-		if (state == null || StringUtils.isBlank(state.getVisualVmExecutable())) {
+		if (state == null || StringUtils.isBlank(state.getVisualVmExecutable()) || !new File(state.getVisualVmExecutable()).exists()) {
 			result = false;
 		}
 		return result;

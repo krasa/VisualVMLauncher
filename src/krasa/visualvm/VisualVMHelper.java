@@ -37,6 +37,9 @@ public final class VisualVMHelper {
 
 	public static void startVisualVM() {
 		VisualVMContext context = VisualVMContext.load();
+		if (context == null) {
+			throw new RuntimeException("Context is null from some unknown reason");
+		}
 		Long appId = context.getAppId();
 		String jdkPath = context.getJdkPath();
 		startVisualVM(appId, jdkPath);
