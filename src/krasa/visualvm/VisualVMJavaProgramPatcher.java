@@ -4,7 +4,6 @@ import com.intellij.execution.CantRunException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.JavaProgramPatcher;
 import com.intellij.openapi.diagnostic.Logger;
 
@@ -13,20 +12,22 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 
 	@Override
 	public void patchJavaParameters(Executor executor, RunProfile configuration, JavaParameters javaParameters) {
+		String jdkPath;
 		try {
-			String jdkPath = javaParameters.getJdkPath();
-			Long appId = VisualVMHelper.getNextID();
-
-			log.info("Patching: jdkPath="+jdkPath+"; appId="+appId);
-			for (String arg : VisualVMHelper.getJvmArgs(appId)) {
-				javaParameters.getVMParametersList().prepend(arg);
-			}
-
-			new VisualVMContext(appId, jdkPath).save();
+			jdkPath = javaParameters.getJdkPath();
 		} catch (CantRunException e) {
-			log.error(e);
-			throw new RuntimeException(e);
+			return;
 		}
+
+		Long appId = VisualVMHelper.getNextID();
+
+		log.info("Patching: jdkPath=" + jdkPath + "; appId=" + appId);
+		for (String arg : VisualVMHelper.getJvmArgs(appId)) {
+			javaParameters.getVMParametersList().prepend(arg);
+		}
+
+		new VisualVMContext(appId, jdkPath).save();
+
 	}
 
 }

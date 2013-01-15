@@ -33,23 +33,37 @@ import java.util.StringTokenizer;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
+import com.intellij.openapi.application.ApplicationManager;
+
 public final class VisualVMHelper {
 
 	public static void startVisualVM() {
 		VisualVMContext context = VisualVMContext.load();
 		if (context == null) {
-			throw new RuntimeException("Context is null from some unknown reason");
+			final Notification notification = new Notification("VisualVMLauncher", "",
+					"VisualVM Launcher does not currently support this Run/Debug Configuration type.",
+					NotificationType.ERROR);
+			ApplicationManager.getApplication().invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					Notifications.Bus.notify(notification);
+				}
+			});
+		} else {
+			Long appId = context.getAppId();
+			String jdkPath = context.getJdkPath();
+			startVisualVM(appId, jdkPath);
 		}
-		Long appId = context.getAppId();
-		String jdkPath = context.getJdkPath();
-		startVisualVM(appId, jdkPath);
 	}
 
 	public static void startVisualVM(long appId, String jdkHome) {
 		String visualVmHome = getVisualVmHome();
 		String debug = "appId=" + appId + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
 		try {
-            VisualVMHelper.openInVisualVM(appId, visualVmHome, jdkHome);
+			VisualVMHelper.openInVisualVM(appId, visualVmHome, jdkHome);
 		} catch (IOException e) {
 			throw new RuntimeException(debug, e);
 		}
@@ -68,16 +82,16 @@ public final class VisualVMHelper {
 			}
 		}
 
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("SpecVersion");
-            sb.append("{major=").append(major);
-            sb.append(", minor=").append(minor);
-            sb.append('}');
-            return sb.toString();
-        }
-    }
+		@Override
+		public String toString() {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("SpecVersion");
+			sb.append("{major=").append(major);
+			sb.append(", minor=").append(minor);
+			sb.append('}');
+			return sb.toString();
+		}
+	}
 
 	public static long getNextID() {
 		return System.nanoTime();
