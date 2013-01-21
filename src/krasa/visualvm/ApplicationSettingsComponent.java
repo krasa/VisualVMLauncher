@@ -67,7 +67,7 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 
 	@Nullable
 	public Icon getIcon() {
-		return Resources.LOGO_32;
+		return null;
 	}
 
 	@Nullable

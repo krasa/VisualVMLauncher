@@ -13,7 +13,7 @@ public class StartVisualVMConsoleAction extends AnAction {
 	private VisualVMContext visualVMContext;
 
 	public StartVisualVMConsoleAction(VisualVMContext visualVMContext) {
-		super("Start VisualVM", null, Resources.RUN);
+		super("Start VisualVM", null, Resources.CONSOLE_RUN);
 		this.visualVMContext = visualVMContext;
 	}
 
