@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>0.7</version>
+	<version>0.8 beta</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -10,10 +10,12 @@
 	<description><![CDATA[
      Launches VisualVM from within IDEA. <br/>
      Use buttons from main toolbar to start VisualVM along with executed application, 
-     or button next to the console window of already started application. It currently does not support server integrations like Tomcat.
+     or button next to the console window of already started application. 
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>0.8 (2013-01-23)
+        <br>- experimental support for Tomcat and maybe other servers
         <br>0.7 (2013-01-22)
         <br>- new icons
         <br>0.6 (2013-01-15)
@@ -58,7 +60,6 @@
 		<java.programPatcher implementation="krasa.visualvm.VisualVMJavaProgramPatcher"/>
 		<consoleActionsPostProcessor implementation="krasa.visualvm.VisualVMConsoleActionsPostProcessor"/>
 	</extensions>
-
 
 
 </idea-plugin>

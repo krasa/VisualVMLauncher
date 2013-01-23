@@ -69,6 +69,17 @@ public final class VisualVMHelper {
 		}
 	}
 
+	public static void startVisualVM(Long appId) {
+		String visualVmHome = getVisualVmHome();
+		String jdkHome = null;
+		String debug = "appId=" + appId + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
+		try {
+			VisualVMHelper.openInVisualVM(appId, visualVmHome, jdkHome);
+		} catch (IOException e) {
+			throw new RuntimeException(debug, e);
+		}
+	}
+
 	private static class SpecVersion {
 		int major, minor;
 
@@ -107,7 +118,12 @@ public final class VisualVMHelper {
 	}
 
 	public static void openInVisualVM(long id, String visualVmPath, String jdkHome) throws IOException {
-		Runtime.getRuntime().exec(new String[] { visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id) });
+		if (jdkHome == null) {
+			Runtime.getRuntime().exec(new String[] { visualVmPath, "--openid", String.valueOf(id) });
+		} else {
+			Runtime.getRuntime().exec(
+					new String[] { visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id) });
+		}
 	}
 
 	private static SpecVersion getJavaVersion(String jdkHome) {

@@ -12,11 +12,11 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 
 	@Override
 	public void patchJavaParameters(Executor executor, RunProfile configuration, JavaParameters javaParameters) {
-		String jdkPath;
+		String jdkPath = null;
 		try {
 			jdkPath = javaParameters.getJdkPath();
 		} catch (CantRunException e) {
-			return;
+			// return;
 		}
 
 		Long appId = VisualVMHelper.getNextID();

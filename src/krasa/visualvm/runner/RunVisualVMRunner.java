@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
+import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunnerSettings;
@@ -54,6 +55,11 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		return RunVisualVMExecutor.RUN_WITH_VISUAL_VM;
 	}
 
+	public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
+		return executorId.equals(RunVisualVMExecutor.RUN_WITH_VISUAL_VM) && profile instanceof ModuleRunProfile
+				&& !(profile instanceof RemoteConfiguration);
+	}
+
 	@Override
 	public void execute(@NotNull Executor executor, @NotNull ExecutionEnvironment environment)
 			throws ExecutionException {
@@ -64,15 +70,20 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		super.execute(executor, environment);
 	}
 
-	public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-		return executorId.equals(RunVisualVMExecutor.RUN_WITH_VISUAL_VM) && profile instanceof ModuleRunProfile
-				&& !(profile instanceof RemoteConfiguration);
-	}
-
 	@Override
 	public void onProcessStarted(RunnerSettings settings, ExecutionResult executionResult) {
 		super.onProcessStarted(settings, executionResult);
-		VisualVMHelper.startVisualVM();
+		if (!"com.intellij.javaee.run.configuration.CommonStrategy".equals(settings.getRunProfile().getClass().getName())) {
+			VisualVMHelper.startVisualVM();
+		}
 	}
 
+	@Override
+	public void patch(JavaParameters javaParameters, RunnerSettings settings, boolean beforeExecution)
+			throws ExecutionException {
+		if (!beforeExecution) {
+			VisualVMHelper.startVisualVM();
+		}
+		super.patch(javaParameters, settings, beforeExecution);
+	}
 }
