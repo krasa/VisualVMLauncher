@@ -37,6 +37,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
+import org.jetbrains.annotations.Nullable;
 
 public final class VisualVMHelper {
 
@@ -111,8 +112,7 @@ public final class VisualVMHelper {
 	public static String[] getJvmArgs(long id) {
 		return new String[] { "-Dvisualvm.id=" + id };
 	}
-
-	@NotNull
+@Nullable
 	public static String getVisualVmHome() {
 		return ApplicationSettingsComponent.getInstance().getVisualVmHome();
 	}
