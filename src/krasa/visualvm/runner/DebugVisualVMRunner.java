@@ -135,8 +135,8 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 				@Override
 				public void run() {
 					LogHelper.print("#Thread run", this);
-					try {//todo
-						Thread.sleep(500);
+					try {
+						Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
 						VisualVMHelper.startVisualVM(debuggerSettings, DebugVisualVMRunner.this);
 					} catch (Exception e) {
 						log.error(e);

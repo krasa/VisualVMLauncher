@@ -111,7 +111,12 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 		form = null;
 	}
 
+	@NotNull
 	public PluginSettings getState() {
+
+		if (settings == null) {
+			settings = new PluginSettings();
+		}
 		return settings;
 	}
 

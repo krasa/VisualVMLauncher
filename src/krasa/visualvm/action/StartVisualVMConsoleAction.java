@@ -80,7 +80,7 @@ public class StartVisualVMConsoleAction extends AnAction {
 	private boolean isRecentlyCreated(StartVisualVMConsoleAction next) {
 		long l = System.currentTimeMillis() - next.getCreated();
 		LogHelper.print("#isRecentlyCreated " + l + " " + next, this);
-		return l < 5000;
+		return l < ApplicationSettingsComponent.getInstance().getState().getDurationToSetContextToButtonAsLong();
 	}
 
 	@Override

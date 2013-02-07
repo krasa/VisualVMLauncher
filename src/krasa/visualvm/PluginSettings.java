@@ -9,6 +9,7 @@ public class PluginSettings {
 	private String visualVmExecutable;
 	private boolean debug;
 	private String durationToSetContextToButton = "5000";
+	private String delayForVisualVMStart = "500";
 
 	public String getVisualVmExecutable() {
 		return visualVmExecutable;
@@ -41,5 +42,21 @@ public class PluginSettings {
 
 	public void setDurationToSetContextToButton(final String durationToSetContextToButton) {
 		this.durationToSetContextToButton = durationToSetContextToButton;
+	}
+
+	public String getDelayForVisualVMStart() {
+		return delayForVisualVMStart;
+	}
+
+	public void setDelayForVisualVMStart(String delayForVisualVMStart) {
+		this.delayForVisualVMStart = delayForVisualVMStart;
+	}
+
+	public long getDurationToSetContextToButtonAsLong() {
+		return Long.parseLong(durationToSetContextToButton);
+	}
+
+	public long getDelayForVisualVMStartAsLong() {
+		return Long.parseLong(delayForVisualVMStart);
 	}
 }

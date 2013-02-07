@@ -141,7 +141,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
 						VisualVMHelper.startVisualVM(debuggerSettings, RunVisualVMRunner.this);
 					} catch (Exception e) {
 						log.error(e);
@@ -152,4 +152,5 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 			VisualVMHelper.startVisualVM(debuggerSettings, this);
 		}
 	}
+
 }

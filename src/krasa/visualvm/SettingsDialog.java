@@ -31,37 +31,15 @@ public class SettingsDialog {
 	private JCheckBox debugCheckBox;
 	private JFormattedTextField duration;
 	private JLabel durationLabel;
+	private JFormattedTextField delayForStgartingVisualVM;
 
 	public SettingsDialog() {
 		super();
 
-		NumberFormatter defaultFormat = new NumberFormatter();
-		NumberFormat integerInstance = NumberFormat.getIntegerInstance();
-		integerInstance.setGroupingUsed(false);
-		defaultFormat.setFormat(integerInstance
-		);
-		DefaultFormatterFactory tf = new DefaultFormatterFactory(defaultFormat);
-		duration.setFormatterFactory(tf
-		);
-//		duration.setInputVerifier(new InputVerifier() {
-//			@Override
-//			public boolean verify(JComponent input) {
-//				if (input instanceof JFormattedTextField) {
-//					JFormattedTextField ftf = (JFormattedTextField) input;
-//					JFormattedTextField.AbstractFormatter formatter = ftf.getFormatter();
-//					if (formatter != null) {
-//						String text = ftf.getText();
-//						try {
-//							formatter.stringToValue(text);
-//						} catch (ParseException e) {
-//							return false;
-//						}
-//						return true;
-//					}
-//				}
-//				return true;
-//			}
-//		});
+		duration.setFormatterFactory(getDefaultFormatterFactory());
+		delayForStgartingVisualVM.setFormatterFactory(getDefaultFormatterFactory());
+
+
 		browseButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -98,6 +76,15 @@ public class SettingsDialog {
 		});
 	}
 
+	private DefaultFormatterFactory getDefaultFormatterFactory() {
+		NumberFormatter defaultFormat = new NumberFormatter();
+		NumberFormat integerInstance = NumberFormat.getIntegerInstance();
+		integerInstance.setGroupingUsed(false);
+		defaultFormat.setFormat(integerInstance
+		);
+		return new DefaultFormatterFactory(defaultFormat);
+	}
+
 	private void browseForFile(@NotNull final JTextField target) {
 		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
 		descriptor.setHideIgnored(true);
@@ -131,23 +118,26 @@ public class SettingsDialog {
 
 	public void setData(PluginSettings data) {
 		visualVmExecutable.setText(data.getVisualVmExecutable());
-		debugCheckBox.setSelected(data.getDebug());
 		duration.setText(data.getDurationToSetContextToButton());
+		delayForStgartingVisualVM.setText(data.getDelayForVisualVMStart());
+		debugCheckBox.setSelected(data.getDebug());
 	}
 
 	public void getData(PluginSettings data) {
 		data.setVisualVmExecutable(visualVmExecutable.getText());
-		data.setDebug(debugCheckBox.isSelected());
 		data.setDurationToSetContextToButton(duration.getText());
+		data.setDelayForVisualVMStart(delayForStgartingVisualVM.getText());
+		data.setDebug(debugCheckBox.isSelected());
 	}
 
 	public boolean isModified(PluginSettings data) {
 		if (visualVmExecutable.getText() != null ? !visualVmExecutable.getText().equals(data.getVisualVmExecutable()) : data.getVisualVmExecutable() != null)
 			return true;
-		if (debugCheckBox.isSelected() != data.getDebug()) return true;
 		if (duration.getText() != null ? !duration.getText().equals(data.getDurationToSetContextToButton()) : data.getDurationToSetContextToButton() != null)
 			return true;
+		if (delayForStgartingVisualVM.getText() != null ? !delayForStgartingVisualVM.getText().equals(data.getDelayForVisualVMStart()) : data.getDelayForVisualVMStart() != null)
+			return true;
+		if (debugCheckBox.isSelected() != data.getDebug()) return true;
 		return false;
 	}
-
 }
