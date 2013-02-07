@@ -18,7 +18,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 
-@State(name = "VisualVMLauncher", storages = { @Storage(id = "VisualVMLauncher", file = "$APP_CONFIG$/VisualVMLauncher.xml") })
+@State(name = "VisualVMLauncher", storages = {@Storage(id = "VisualVMLauncher", file = "$APP_CONFIG$/VisualVMLauncher.xml")})
 public class ApplicationSettingsComponent implements ApplicationComponent, Configurable,
 		PersistentStateComponent<PluginSettings> {
 	private static final Logger log = Logger.getInstance(ApplicationSettingsComponent.class.getName());
@@ -89,7 +89,8 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 
 	public void apply() throws ConfigurationException {
 		if (form != null) {
-			 form.getData(settings);
+			form.getData(settings);
+			LogHelper.debug = settings.getDebug();
 		}
 	}
 
@@ -116,5 +117,6 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 
 	public void loadState(PluginSettings state) {
 		this.settings = state;
+		LogHelper.debug = settings.getDebug();
 	}
 }

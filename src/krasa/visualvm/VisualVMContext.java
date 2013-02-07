@@ -3,6 +3,7 @@ package krasa.visualvm;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import com.intellij.openapi.diagnostic.Logger;
+import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
 
 /*dirty, but works*/
 public class VisualVMContext {
@@ -15,6 +16,10 @@ public class VisualVMContext {
 	public VisualVMContext(Long appId, String jdkPath) {
 		this.appId = appId;
 		this.jdkPath = jdkPath;
+	}
+
+	public VisualVMContext(VisualVMGenericDebuggerRunnerSettings debuggerSettings) {
+		this.appId = debuggerSettings.getVisualVMId();
 	}
 
 	public Long getAppId() {
@@ -35,8 +40,7 @@ public class VisualVMContext {
 	}
 
 	public static boolean isValid(VisualVMContext visualVMContext) {
-		return visualVMContext != null && isNotBlank(visualVMContext.getJdkPath())
-				&& visualVMContext.getAppId() != null;
+		return visualVMContext != null && visualVMContext.getAppId() != null;
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class VisualVMContext {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("VisualVMContext");
 		sb.append("{appId=").append(appId);
-		sb.append(", jdkPath='").append(jdkPath).append('\'');
+//		sb.append(", jdkPath='").append(jdkPath).append('\'');
 		sb.append('}');
 		return sb.toString();
 	}

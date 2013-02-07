@@ -2,14 +2,16 @@ package krasa.visualvm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,8 +28,40 @@ public class SettingsDialog {
 	private JComponent rootComponent;
 	private JButton browseButton;
 	private JLabel validationMessageLabel;
+	private JCheckBox debugCheckBox;
+	private JFormattedTextField duration;
+	private JLabel durationLabel;
 
 	public SettingsDialog() {
+		super();
+
+		NumberFormatter defaultFormat = new NumberFormatter();
+		NumberFormat integerInstance = NumberFormat.getIntegerInstance();
+		integerInstance.setGroupingUsed(false);
+		defaultFormat.setFormat(integerInstance
+		);
+		DefaultFormatterFactory tf = new DefaultFormatterFactory(defaultFormat);
+		duration.setFormatterFactory(tf
+		);
+//		duration.setInputVerifier(new InputVerifier() {
+//			@Override
+//			public boolean verify(JComponent input) {
+//				if (input instanceof JFormattedTextField) {
+//					JFormattedTextField ftf = (JFormattedTextField) input;
+//					JFormattedTextField.AbstractFormatter formatter = ftf.getFormatter();
+//					if (formatter != null) {
+//						String text = ftf.getText();
+//						try {
+//							formatter.stringToValue(text);
+//						} catch (ParseException e) {
+//							return false;
+//						}
+//						return true;
+//					}
+//				}
+//				return true;
+//			}
+//		});
 		browseButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -74,15 +108,11 @@ public class SettingsDialog {
 				: LocalFileSystem.getInstance().findFileByPath(text);
 
 		// 10.5 does not have #chooseFile
-        Project defaultProject = ProjectManager.getInstance().getDefaultProject();
-        VirtualFile[] virtualFile = FileChooser.chooseFiles(defaultProject, descriptor, toSelect);
+		Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+		VirtualFile[] virtualFile = FileChooser.chooseFiles(defaultProject, descriptor, toSelect);
 		if (virtualFile != null && virtualFile.length > 0) {
 			target.setText(virtualFile[0].getPath());
 		}
-	}
-
-	public void setData(PluginSettings data) {
-		visualVmExecutable.setText(data.getVisualVmExecutable());
 	}
 
 	private void setValidationMessage(String visualVmExecutable1) {
@@ -92,21 +122,32 @@ public class SettingsDialog {
 			validationMessageLabel.setText("File does not exists");
 		} else {
 			validationMessageLabel.setText("");
-		} 
-	}
-
-	public void getData(PluginSettings data) {
-		data.setVisualVmExecutable(visualVmExecutable.getText());
-	}
-
-	public boolean isModified(PluginSettings data) {
-		if (visualVmExecutable.getText() != null ? !visualVmExecutable.getText().equals(data.getVisualVmExecutable())
-				: data.getVisualVmExecutable() != null)
-			return true;
-		return false;
+		}
 	}
 
 	public JComponent getRootComponent() {
 		return rootComponent;
 	}
+
+	public void setData(PluginSettings data) {
+		visualVmExecutable.setText(data.getVisualVmExecutable());
+		debugCheckBox.setSelected(data.getDebug());
+		duration.setText(data.getDurationToSetContextToButton());
+	}
+
+	public void getData(PluginSettings data) {
+		data.setVisualVmExecutable(visualVmExecutable.getText());
+		data.setDebug(debugCheckBox.isSelected());
+		data.setDurationToSetContextToButton(duration.getText());
+	}
+
+	public boolean isModified(PluginSettings data) {
+		if (visualVmExecutable.getText() != null ? !visualVmExecutable.getText().equals(data.getVisualVmExecutable()) : data.getVisualVmExecutable() != null)
+			return true;
+		if (debugCheckBox.isSelected() != data.getDebug()) return true;
+		if (duration.getText() != null ? !duration.getText().equals(data.getDurationToSetContextToButton()) : data.getDurationToSetContextToButton() != null)
+			return true;
+		return false;
+	}
+
 }

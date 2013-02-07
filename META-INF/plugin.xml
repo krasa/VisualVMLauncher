@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>0.8.1 beta</version>
+	<version>1.0.0 beta</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.0.0 beta (2013-02-05)
+        <br>- should be more reliable
         <br>0.8.1 (2013-01-28)
         <br>- fixed exception in Run configuration
         <br>0.8 (2013-01-23)
@@ -35,6 +37,9 @@
         <br>0.1 (2012-11-05)
         <br>- Initial release
         <br>
+        <br>Known issues:      
+        <br>Console button does not work for Tomcat and other configuration types.
+        
       ]]>
 	</change-notes>
 

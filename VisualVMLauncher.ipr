@@ -27,7 +27,6 @@
   </component>
   <component name="EclipseCodeFormatter">
     <option name="defaultSettings" value="true" />
-    <option name="formatter" value="ECLIPSE" />
     <option name="id" value="1340799126271" />
     <option name="name" value="default" />
     <option name="pathToConfigFileJava" value="$PROJECT_DIR$/../../_T-Mobile/org.eclipse.jdt.core.prefs" />
@@ -36,27 +35,7 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
-  <component name="GradleUISettings2">
-    <setting name="root">
-      <setting name="task-tab">
-        <setting name="show-description" value="true" />
-      </setting>
-      <setting name="favorites-tab" />
-      <setting name="command_line-tab" />
-      <setting name="setup-tab">
-        <setting name="setup">
-          <setting name="custom-gradle-executor" />
-          <setting name="current-directory" value="D:\workspace\_projekty\GitHub\VisualVMLauncher" />
-          <setting name="log-level" value="LIFECYCLE" />
-        </setting>
-      </setting>
-    </setting>
-  </component>
-  <component name="IntelliCalc">
-    <mode value="0" />
-    <system value="10" />
-    <angles value="deg" />
-  </component>
+  <component name="IdProvider" IDEtalkID="37706A22B8050532B36C6B03AF240FD2" />
   <component name="IvyIDEA.ProjectSettings">
     <option name="artifactTypeSettings">
       <ArtifactTypeSettings />
@@ -191,7 +170,7 @@
       <module fileurl="file://$PROJECT_DIR$/VisualVMLauncher.iml" filepath="$PROJECT_DIR$/VisualVMLauncher.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA IC-122.694" project-jdk-type="IDEA JDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA IU-122.746" project-jdk-type="IDEA JDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">

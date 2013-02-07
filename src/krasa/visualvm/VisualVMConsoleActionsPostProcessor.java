@@ -19,12 +19,9 @@ public class VisualVMConsoleActionsPostProcessor implements ConsoleActionsPostPr
 	@Override
 	public AnAction[] postProcess(@NotNull ConsoleView console, @NotNull AnAction[] actions) {
 		VisualVMContext context = VisualVMContext.load();
-		if (VisualVMContext.isValid(context)) {
-			ArrayList<AnAction> anActions = new ArrayList<AnAction>();
-			anActions.add(new StartVisualVMConsoleAction(context));
-            anActions.addAll(Arrays.asList(actions));
-            return anActions.toArray(new AnAction[anActions.size()]);
-		}
-		return actions;
+		ArrayList<AnAction> anActions = new ArrayList<AnAction>();
+		anActions.add(new StartVisualVMConsoleAction(context));
+		anActions.addAll(Arrays.asList(actions));
+		return anActions.toArray(new AnAction[anActions.size()]);
 	}
 }
