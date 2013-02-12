@@ -29,11 +29,7 @@ public class PluginSettings {
 
 
 	public static boolean isValid(PluginSettings state) {
-		boolean result = true;
-		if (state == null || StringUtils.isBlank(state.getVisualVmExecutable()) || !new File(state.getVisualVmExecutable()).exists()) {
-			result = false;
-		}
-		return result;
+		return state != null && VisualVMHelper.isValidPath(state.getVisualVmExecutable());
 	}
 
 	public String getDurationToSetContextToButton() {

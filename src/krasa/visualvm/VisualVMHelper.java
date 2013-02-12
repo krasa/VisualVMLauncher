@@ -38,6 +38,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 public final class VisualVMHelper {
@@ -121,13 +122,29 @@ public final class VisualVMHelper {
 	}
 
 	public static void openInVisualVM(long id, String visualVmPath, String jdkHome, Object thisInstance) throws IOException {
-		LogHelper.print("starting " + id, thisInstance);
-		if (jdkHome == null) {
-			Runtime.getRuntime().exec(new String[]{visualVmPath, "--openid", String.valueOf(id)});
+		if (!isValidPath(visualVmPath)) {
+			final Notification notification = new Notification("VisualVMLauncher", "",
+					"Path to VisualVM is not valid, path='" + visualVmPath + "'",
+					NotificationType.ERROR);
+			ApplicationManager.getApplication().invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					Notifications.Bus.notify(notification);
+				}
+			});
 		} else {
-			Runtime.getRuntime().exec(
-					new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id)});
+			LogHelper.print("starting " + id, thisInstance);
+			if (jdkHome == null) {
+				Runtime.getRuntime().exec(new String[]{visualVmPath, "--openid", String.valueOf(id)});
+			} else {
+				Runtime.getRuntime().exec(
+						new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id)});
+			}
 		}
+	}
+
+	public static boolean isValidPath(String visualVmPath) {
+		return !StringUtils.isBlank(visualVmPath) && new File(visualVmPath).exists();
 	}
 
 	private static SpecVersion getJavaVersion(String jdkHome) {
