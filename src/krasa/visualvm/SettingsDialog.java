@@ -35,7 +35,6 @@ public class SettingsDialog {
 
 	public SettingsDialog() {
 		super();
-
 		duration.setFormatterFactory(getDefaultFormatterFactory());
 		delayForStgartingVisualVM.setFormatterFactory(getDefaultFormatterFactory());
 
@@ -139,5 +138,10 @@ public class SettingsDialog {
 			return true;
 		if (debugCheckBox.isSelected() != data.getDebug()) return true;
 		return false;
+	}
+
+	public void setDataCustom(PluginSettings settings) {
+		setData(settings);
+		setValidationMessage(settings.getVisualVmExecutable());
 	}
 }

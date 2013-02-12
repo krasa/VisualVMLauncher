@@ -96,7 +96,7 @@ public class ApplicationSettingsComponent implements ApplicationComponent, Confi
 
 	public void reset() {
 		if (form != null) {
-			form.setData(settings);
+			form.setDataCustom(settings);
 		}
 	}
 
