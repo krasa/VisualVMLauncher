@@ -35,9 +35,6 @@ import com.intellij.openapi.project.Project;
 public class DebugVisualVMRunner extends GenericDebuggerRunner {
 	private static final Logger log = Logger.getInstance(DebugVisualVMRunner.class.getName());
 
-	protected long nextID;
-	protected boolean run;
-
 	@NotNull
 	public String getRunnerId() {
 		return DebugVisualVMExecutor.EXECUTOR_ID;
@@ -142,7 +139,7 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 						log.error(e);
 					}
 				}
-			}.run();
+			}.start();
 		} else {
 			VisualVMHelper.startVisualVM(debuggerSettings, this);
 		}

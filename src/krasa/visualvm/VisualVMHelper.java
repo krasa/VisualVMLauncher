@@ -44,25 +44,6 @@ import org.jetbrains.annotations.Nullable;
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
 
-	public static void startVisualVM(final Object thisInstance) {
-		VisualVMContext context = VisualVMContext.load();
-		if (context == null) {
-			final Notification notification = new Notification("VisualVMLauncher", "",
-					"VisualVM Launcher does not currently support this Run/Debug Configuration type.",
-					NotificationType.ERROR);
-			ApplicationManager.getApplication().invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					Notifications.Bus.notify(notification);
-				}
-			});
-		} else {
-			Long appId = context.getAppId();
-			String jdkPath = context.getJdkPath();
-			startVisualVM(appId, jdkPath, thisInstance);
-		}
-	}
-
 	public static void startVisualVM(long appId, String jdkHome, final Object thisInstance) {
 		String visualVmHome = getVisualVmHome();
 		String debug = "appId=" + appId + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;

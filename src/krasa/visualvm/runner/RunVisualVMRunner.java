@@ -97,7 +97,6 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 
 	@Override
 	protected RunContentDescriptor doExecute(Project project, Executor executor, RunProfileState state, RunContentDescriptor contentToReuse, ExecutionEnvironment env) throws ExecutionException {
-//		addVisualVMIdToJavaParameter(state);
 		RunContentDescriptor runContentDescriptor = super.doExecute(project, executor, state, contentToReuse, env);
 		runVisualVM(state);
 		return runContentDescriptor;
@@ -147,7 +146,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 						log.error(e);
 					}
 				}
-			}.run();
+			}.start();
 		} else {
 			VisualVMHelper.startVisualVM(debuggerSettings, this);
 		}
