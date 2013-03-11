@@ -4,6 +4,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import com.intellij.openapi.diagnostic.Logger;
 import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
+import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
 
 /*dirty, but works*/
 public class VisualVMContext {
@@ -20,6 +21,10 @@ public class VisualVMContext {
 
 	public VisualVMContext(VisualVMGenericDebuggerRunnerSettings debuggerSettings) {
 		this.appId = debuggerSettings.getVisualVMId();
+	}
+
+	public VisualVMContext(VisualVMGenericRunnerSettings runnerSettings) {
+		this.appId = runnerSettings.getVisualVMId();
 	}
 
 	public Long getAppId() {

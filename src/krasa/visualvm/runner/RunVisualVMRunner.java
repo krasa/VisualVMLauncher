@@ -76,9 +76,9 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	@Override
 	public void execute(@NotNull Executor executor, @NotNull ExecutionEnvironment environment)
 			throws ExecutionException {
-		final VisualVMGenericDebuggerRunnerSettings debuggerSettings = ((VisualVMGenericDebuggerRunnerSettings) environment.getRunnerSettings().getData());
-		debuggerSettings.generateId();
-		new VisualVMContext(debuggerSettings).save();
+		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) environment.getRunnerSettings().getData());
+		settings.generateId();
+		new VisualVMContext(settings).save();
 
 		LogHelper.print("#execute", this);
 
@@ -119,36 +119,33 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 
 	/*used for tomcat and normal applications*/
 	private void addVisualVMIdToJavaParameter(JavaParameters javaParameters, RunnerSettings settings) throws ExecutionException {
-		final VisualVMGenericDebuggerRunnerSettings debuggerSettings = ((VisualVMGenericDebuggerRunnerSettings) settings.getData());
-		if (StringUtil.isEmpty(debuggerSettings.getDebugPort())) {
-			debuggerSettings.setDebugPort(DebuggerUtils.getInstance().findAvailableDebugAddress(debuggerSettings.getTransport() == DebuggerSettings.SOCKET_TRANSPORT));
-		}
-		LogHelper.print("#addVisualVMIdToJavaParameter -Dvisualvm.id=" + debuggerSettings.getVisualVMId(), this);
-		javaParameters.getVMParametersList().add("-Dvisualvm.id=" + debuggerSettings.getVisualVMId());
+		final VisualVMGenericRunnerSettings runnerSettings = ((VisualVMGenericRunnerSettings) settings.getData());
+		LogHelper.print("#addVisualVMIdToJavaParameter -Dvisualvm.id=" + runnerSettings.getVisualVMId(), this);
+		javaParameters.getVMParametersList().add("-Dvisualvm.id=" + runnerSettings.getVisualVMId());
 	}
 
 	@Override
-	public VisualVMGenericDebuggerRunnerSettings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
-		return new VisualVMGenericDebuggerRunnerSettings();
+	public VisualVMGenericRunnerSettings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
+		return new VisualVMGenericRunnerSettings();
 	}
 
 	private void runVisualVM(RunProfileState state) throws ExecutionException {
-		final VisualVMGenericDebuggerRunnerSettings debuggerSettings = ((VisualVMGenericDebuggerRunnerSettings) state.getRunnerSettings().getData());
+		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) state.getRunnerSettings().getData());
 		if (state instanceof PatchedRunnableState) {
-			LogHelper.print("#runVisualVMAsync " + debuggerSettings.getVisualVMId(), this);
+			LogHelper.print("#runVisualVMAsync " + settings.getVisualVMId(), this);
 			new Thread() {
 				@Override
 				public void run() {
 					try {
 						Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
-						VisualVMHelper.startVisualVM(debuggerSettings, RunVisualVMRunner.this);
+						VisualVMHelper.startVisualVM(settings, RunVisualVMRunner.this);
 					} catch (Exception e) {
 						log.error(e);
 					}
 				}
 			}.start();
 		} else {
-			VisualVMHelper.startVisualVM(debuggerSettings, this);
+			VisualVMHelper.startVisualVM(settings, this);
 		}
 	}
 

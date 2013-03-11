@@ -38,6 +38,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
+import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,6 +61,17 @@ public final class VisualVMHelper {
 		String debug = "appId=" + genericDebuggerRunnerSettings.getVisualVMId() + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
 		try {
 			VisualVMHelper.openInVisualVM(genericDebuggerRunnerSettings.getVisualVMId(), visualVmHome, jdkHome, thisInstance);
+		} catch (IOException e) {
+			throw new RuntimeException(debug, e);
+		}
+	}
+
+	public static void startVisualVM(VisualVMGenericRunnerSettings runnerSettings, Object thisInstance) {
+		String visualVmHome = getVisualVmHome();
+		String jdkHome = null;
+		String debug = "appId=" + runnerSettings.getVisualVMId() + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
+		try {
+			VisualVMHelper.openInVisualVM(runnerSettings.getVisualVMId(), visualVmHome, jdkHome, thisInstance);
 		} catch (IOException e) {
 			throw new RuntimeException(debug, e);
 		}
