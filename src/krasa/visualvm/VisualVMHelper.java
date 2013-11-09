@@ -24,23 +24,22 @@
  */
 package krasa.visualvm;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
+import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
+import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
-
-import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
-
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ApplicationManager;
-import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
-import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
@@ -126,7 +125,7 @@ public final class VisualVMHelper {
 				}
 			});
 		} else {
-			LogHelper.print("starting " + id, thisInstance);
+			LogHelper.print("starting VisualVM with id=" + id, thisInstance);
 			if (jdkHome == null) {
 				Runtime.getRuntime().exec(new String[]{visualVmPath, "--openid", String.valueOf(id)});
 			} else {

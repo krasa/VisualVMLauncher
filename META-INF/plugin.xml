@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.3</version>
+	<version>1.4</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.4 (2013-11-09)
+        <br>- IJ 13 API change
         <br>1.3 (2013-03-11)
         <br>- fixed running of TestNG 
         <br>1.2 (2013-03-10)
@@ -49,7 +51,7 @@
       ]]>
 	</change-notes>
 
-	<idea-version since-build="110.137" until-build=""/>
+	<idea-version since-build="132.637" until-build=""/>
 
 	<application-components>
 		<component>

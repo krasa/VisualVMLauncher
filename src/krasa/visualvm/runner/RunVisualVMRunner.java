@@ -31,34 +31,29 @@
 
 package krasa.visualvm.runner;
 
-import com.intellij.debugger.engine.DebuggerUtils;
-import com.intellij.debugger.settings.DebuggerSettings;
-import com.intellij.execution.configurations.ConfigurationInfoProvider;
-import com.intellij.execution.configurations.PatchedRunnableState;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import krasa.visualvm.ApplicationSettingsComponent;
-import krasa.visualvm.LogHelper;
-import krasa.visualvm.VisualVMContext;
-import krasa.visualvm.VisualVMHelper;
-import krasa.visualvm.executor.RunVisualVMExecutor;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
+import com.intellij.execution.configurations.ConfigurationInfoProvider;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.impl.DefaultJavaProgramRunner;
 import com.intellij.execution.remote.RemoteConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import krasa.visualvm.ApplicationSettingsComponent;
+import krasa.visualvm.Hacks;
+import krasa.visualvm.LogHelper;
+import krasa.visualvm.VisualVMContext;
+import krasa.visualvm.VisualVMHelper;
+import krasa.visualvm.executor.RunVisualVMExecutor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	private static final Logger log = Logger.getInstance(DebugVisualVMRunner.class.getName());
@@ -74,19 +69,22 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	}
 
 	@Override
-	public void execute(@NotNull Executor executor, @NotNull ExecutionEnvironment environment)
+	public void execute(@NotNull final ExecutionEnvironment env, @Nullable final Callback callback)
+
 			throws ExecutionException {
-		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) environment.getRunnerSettings().getData());
-		settings.generateId();
-		new VisualVMContext(settings).save();
+		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
+		if (settings != null) {
+			settings.generateId();
+			new VisualVMContext(settings).save();
+		}
 
 		LogHelper.print("#execute", this);
 
-		boolean b = ApplicationSettingsComponent.openSettingsIfNotConfigured(environment.getProject());
+		boolean b = ApplicationSettingsComponent.openSettingsIfNotConfigured(env.getProject());
 		if (!b) {
 			return;
 		}
-		super.execute(executor, environment);
+		super.execute(env, callback);
 	}
 
 
@@ -95,10 +93,15 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		return super.createActions(executionResult);
 	}
 
+
 	@Override
-	protected RunContentDescriptor doExecute(Project project, Executor executor, RunProfileState state, RunContentDescriptor contentToReuse, ExecutionEnvironment env) throws ExecutionException {
-		RunContentDescriptor runContentDescriptor = super.doExecute(project, executor, state, contentToReuse, env);
-		runVisualVM(state);
+	protected RunContentDescriptor doExecute(final Project project,
+											 final RunProfileState state,
+											 final RunContentDescriptor contentToReuse,
+											 final ExecutionEnvironment env) throws ExecutionException {
+
+		RunContentDescriptor runContentDescriptor = super.doExecute(project, state, contentToReuse, env);
+		runVisualVM(env, state);
 		return runContentDescriptor;
 	}
 
@@ -110,28 +113,30 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	}
 
 	@Override
-	public void patch(JavaParameters javaParameters, RunnerSettings settings, boolean beforeExecution)
-			throws ExecutionException {
+	public void patch(JavaParameters javaParameters, RunnerSettings settings, RunProfile runProfile, final boolean beforeExecution) throws ExecutionException {
+
 		addVisualVMIdToJavaParameter(javaParameters, settings);
-		super.patch(javaParameters, settings, beforeExecution);
+		super.patch(javaParameters, settings, runProfile, beforeExecution);
 	}
 
 
 	/*used for tomcat and normal applications*/
 	private void addVisualVMIdToJavaParameter(JavaParameters javaParameters, RunnerSettings settings) throws ExecutionException {
-		final VisualVMGenericRunnerSettings runnerSettings = ((VisualVMGenericRunnerSettings) settings.getData());
+		final VisualVMGenericRunnerSettings runnerSettings = ((VisualVMGenericRunnerSettings) settings);
 		LogHelper.print("#addVisualVMIdToJavaParameter -Dvisualvm.id=" + runnerSettings.getVisualVMId(), this);
 		javaParameters.getVMParametersList().add("-Dvisualvm.id=" + runnerSettings.getVisualVMId());
 	}
 
 	@Override
-	public VisualVMGenericRunnerSettings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
+	@Nullable
+	public RunnerSettings createConfigurationData(final ConfigurationInfoProvider settingsProvider) {
 		return new VisualVMGenericRunnerSettings();
 	}
 
-	private void runVisualVM(RunProfileState state) throws ExecutionException {
-		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) state.getRunnerSettings().getData());
-		if (state instanceof PatchedRunnableState) {
+	private void runVisualVM(ExecutionEnvironment env, RunProfileState state) throws ExecutionException {
+		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
+		// tomcat uses PatchedLocalState
+		if (state.getClass().getSimpleName().equals(Hacks.BUNDLED_SERVERS_RUN_PROFILE_STATE)) {
 			LogHelper.print("#runVisualVMAsync " + settings.getVisualVMId(), this);
 			new Thread() {
 				@Override

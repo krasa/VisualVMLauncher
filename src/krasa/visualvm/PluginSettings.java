@@ -1,15 +1,11 @@
 package krasa.visualvm;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.io.File;
-
 public class PluginSettings {
 
 	private String visualVmExecutable;
 	private boolean debug;
 	private String durationToSetContextToButton = "5000";
-	private String delayForVisualVMStart = "500";
+	private String delayForVisualVMStart = "5000";
 
 	public String getVisualVmExecutable() {
 		return visualVmExecutable;

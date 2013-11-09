@@ -1,14 +1,13 @@
 package krasa.visualvm.runner;
 
-import com.intellij.debugger.impl.GenericDebuggerRunnerSettings;
+import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import krasa.visualvm.VisualVMHelper;
 import org.jdom.Element;
 
-public class VisualVMGenericRunnerSettings implements JDOMExternalizable {
+public class VisualVMGenericRunnerSettings implements RunnerSettings {
 	protected long visualVMId;
 
 	public VisualVMGenericRunnerSettings() {

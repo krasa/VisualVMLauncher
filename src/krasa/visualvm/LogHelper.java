@@ -9,7 +9,7 @@ public class LogHelper {
 	public static void print(String x, Object thisInstance) {
 		if (debug) {
 			System.out.println(thisInstance.getClass().getSimpleName() + ": " + x);
-			log.debug(thisInstance.getClass().getSimpleName() + ": " + x);
+			log.info(thisInstance.getClass().getSimpleName() + ": " + x);
 		}
 	}
 
