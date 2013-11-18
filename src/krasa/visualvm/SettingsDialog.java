@@ -12,6 +12,7 @@ import javax.swing.event.DocumentListener;
 
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -95,7 +96,7 @@ public class SettingsDialog {
 
 		// 10.5 does not have #chooseFile
 		Project defaultProject = ProjectManager.getInstance().getDefaultProject();
-		VirtualFile[] virtualFile = FileChooser.chooseFiles(defaultProject, descriptor, toSelect);
+		VirtualFile[] virtualFile = FileChooser.chooseFiles(descriptor, defaultProject, toSelect);
 		if (virtualFile != null && virtualFile.length > 0) {
 			target.setText(virtualFile[0].getPath());
 		}
