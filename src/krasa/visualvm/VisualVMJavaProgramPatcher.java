@@ -34,7 +34,9 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 	private VisualVMContext patch(JavaParameters javaParameters) {
 		String jdkPath = null;
 		try {
-			jdkPath = javaParameters.getJdkPath();
+			if (javaParameters.getJdk() != null && javaParameters.getJdk().getHomeDirectory() != null) {
+				jdkPath = javaParameters.getJdkPath();
+			}
 		} catch (CantRunException e) {
 			// return;
 		}

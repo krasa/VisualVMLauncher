@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.4.1</version>
+	<version>1.5.13</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,40 +14,13 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.5.13 (2014-02-06)
+        <br>- NPE fix
         <br>1.4 (2013-11-09)
         <br>- IJ 13 API change
-        <br>1.3 (2013-03-11)
-        <br>- fixed running of TestNG 
-        <br>1.2 (2013-03-10)
-        <br>- minor fix
-        <br>1.1 (2013-02-12)
-        <br>- validations
-        <br>1.0 (2013-02-07)
-        <br>- more reliable for using bundled servers
-        <br>0.8.1 (2013-01-28)
-        <br>- fixed exception in Run configuration
-        <br>0.8 (2013-01-23)
-        <br>- experimental support for Tomcat and maybe other servers
-        <br>0.7 (2013-01-22)
-        <br>- new icons
-        <br>0.6 (2013-01-15)
-        <br>- fixed Run/Debug Configuration problem
-        <br>0.5 (2013-01-14)
-        <br>- validations and logging
-        <br>0.4.1 (2012-12-03)
-        <br>- recompiled with java 1.6
-        <br>0.4 (2012-11-13)
-        <br>- fixed file chooser for IJ 11
-        <br>0.3 (2012-11-11)
-        <br>- fixed console buttons
-        <br>0.2 (2012-11-10)
-        <br>- New button next to the console window
+      	<br>...
         <br>0.1 (2012-11-05)
         <br>- Initial release
-        <br>
-        <br>Known issues:      
-        <br>Console button does not work for Tomcat and other configuration types.
-        
       ]]>
 	</change-notes>
 
