@@ -12,7 +12,7 @@ import com.intellij.execution.actions.ConsoleActionsPostProcessor;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.actionSystem.AnAction;
 
-public class VisualVMConsoleActionsPostProcessor implements ConsoleActionsPostProcessor {
+public class VisualVMConsoleActionsPostProcessor extends ConsoleActionsPostProcessor {
 	private static final Logger log = Logger.getInstance(VisualVMConsoleActionsPostProcessor.class.getName());
 
 	@NotNull
