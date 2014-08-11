@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.5.132.637</version>
+	<version>1.6.132.637</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,7 +14,10 @@
       ]]></description>
 
 	<change-notes><![CDATA[
-        <br>1.5 (2014-02-06)
+        <br>1.6 (2014-08-11)
+        <br>- tool window icons fixed
+        <br>1.5 (2014-02-10)
+        <br>- API change
         <br>- NPE fix
         <br>1.4 (2013-11-09)
         <br>- IJ 13 API change
