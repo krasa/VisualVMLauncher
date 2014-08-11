@@ -19,7 +19,7 @@ public class RunVisualVMExecutor extends DefaultRunExecutor {
 	}
 
 	public Icon getToolWindowIcon() {
-		return getIcon();
+		return Resources.RUN_13;
 	}
 
 	@NotNull

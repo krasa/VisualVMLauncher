@@ -20,7 +20,7 @@ public class DebugVisualVMExecutor extends DefaultRunExecutor {
 	}
 
 	public Icon getToolWindowIcon() {
-		return getIcon();
+		return Resources.DEBUG_13;
 	}
 
 	@NotNull
