@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.6.134.1007</version>
+	<version>1.7.138</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.7 (2014-09-20)
+        <br>- IJ 14 API update
         <br>1.6 (2014-08-11)
         <br>- tool window icons fixed
         <br>1.5.134 (2014-02-10)
@@ -27,8 +29,9 @@
       ]]>
 	</change-notes>
 
-	<!--<idea-version since-build="132.637" until-build="134.000"/>&ndash;&gt;-->
-	<idea-version since-build="134.1007"/>
+	<!--<idea-version since-build="132.637" until-build="134.000"/>-->
+	<!--<idea-version since-build="134.1007" until-build="138.000"/>-->
+	<idea-version since-build="138.000"/>
 	
 	<application-components>
 		<component>

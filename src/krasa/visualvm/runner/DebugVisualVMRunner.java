@@ -84,12 +84,12 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 	}
 
 	@Nullable
-	protected RunContentDescriptor createContentDescriptor(Project project, RunProfileState state,
-														   RunContentDescriptor contentToReuse,
-														   ExecutionEnvironment env) throws ExecutionException {
+	@Override
+	protected RunContentDescriptor createContentDescriptor(@NotNull RunProfileState state,
+			@NotNull ExecutionEnvironment environment) throws ExecutionException {
 		LogHelper.print("#createContentDescriptor", this);
-		addVisualVMIdToJavaParameter(env, state);
-		return super.createContentDescriptor(project, state, contentToReuse, env);
+		addVisualVMIdToJavaParameter(environment, state);
+		return super.createContentDescriptor(state, environment);
 	}
 
 	/*is called for normal application*/
@@ -103,13 +103,11 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 		}
 	}
 
-
 	@Nullable
-	protected RunContentDescriptor attachVirtualMachine(Project project, RunProfileState state,
-														RunContentDescriptor contentToReuse,
-														ExecutionEnvironment env, RemoteConnection connection, boolean pollConnection)
-			throws ExecutionException {
-		RunContentDescriptor runContentDescriptor = super.attachVirtualMachine(project, state, contentToReuse, env, connection, pollConnection);
+	@Override
+	protected RunContentDescriptor attachVirtualMachine(RunProfileState state, @NotNull ExecutionEnvironment env,
+			RemoteConnection connection, boolean pollConnection) throws ExecutionException {
+		RunContentDescriptor runContentDescriptor = super.attachVirtualMachine(state, env, connection, pollConnection);
 		LogHelper.print("#attachVirtualMachine", this);
 		runVisualVM(env, state);
 		return runContentDescriptor;

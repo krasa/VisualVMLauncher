@@ -87,24 +87,14 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		super.execute(env, callback);
 	}
 
-
 	@Override
-	public AnAction[] createActions(ExecutionResult executionResult) {
-		return super.createActions(executionResult);
-	}
-
-
-	@Override
-	protected RunContentDescriptor doExecute(final Project project,
-											 final RunProfileState state,
-											 final RunContentDescriptor contentToReuse,
-											 final ExecutionEnvironment env) throws ExecutionException {
-
-		RunContentDescriptor runContentDescriptor = super.doExecute(project, state, contentToReuse, env);
+	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env)
+			throws ExecutionException {
+		RunContentDescriptor runContentDescriptor = super.doExecute(state, env);
 		runVisualVM(env, state);
 		return runContentDescriptor;
 	}
-
+	
 	@Override
 	public void onProcessStarted(RunnerSettings settings, ExecutionResult executionResult) {
 		super.onProcessStarted(settings, executionResult);
