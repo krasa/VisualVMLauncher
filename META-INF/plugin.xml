@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.7.138</version>
+	<version>1.7.138.2210</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -30,8 +30,8 @@
 	</change-notes>
 
 	<!--<idea-version since-build="132.637" until-build="134.000"/>-->
-	<!--<idea-version since-build="134.1007" until-build="138.000"/>-->
-	<idea-version since-build="138.000"/>
+	<!--<idea-version since-build="134.1007" until-build="138.2210"/>-->
+	<idea-version since-build="138.2210"/>
 	
 	<application-components>
 		<component>
