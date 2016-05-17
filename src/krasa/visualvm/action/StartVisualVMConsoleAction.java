@@ -3,11 +3,8 @@ package krasa.visualvm.action;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import krasa.visualvm.ApplicationSettingsComponent;
-import krasa.visualvm.LogHelper;
-import krasa.visualvm.Resources;
-import krasa.visualvm.VisualVMContext;
-import krasa.visualvm.VisualVMHelper;
+
+import krasa.visualvm.*;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -43,7 +40,7 @@ public class StartVisualVMConsoleAction extends AnAction {
 
 	@Override
 	public void actionPerformed(final AnActionEvent e) {
-		if (!ApplicationSettingsComponent.openSettingsIfNotConfigured(e.getProject())) {
+		if (!MyConfigurable.openSettingsIfNotConfigured(e.getProject())) {
 			return;
 		}
 		VisualVMHelper.startVisualVM(visualVMContext.getAppId(), visualVMContext.getJdkPath(), this);

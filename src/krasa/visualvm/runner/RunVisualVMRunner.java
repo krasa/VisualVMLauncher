@@ -43,14 +43,8 @@ import com.intellij.execution.impl.DefaultJavaProgramRunner;
 import com.intellij.execution.remote.RemoteConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import krasa.visualvm.ApplicationSettingsComponent;
-import krasa.visualvm.Hacks;
-import krasa.visualvm.LogHelper;
-import krasa.visualvm.VisualVMContext;
-import krasa.visualvm.VisualVMHelper;
+import krasa.visualvm.*;
 import krasa.visualvm.executor.RunVisualVMExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +74,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 
 		LogHelper.print("#execute", this);
 
-		boolean b = ApplicationSettingsComponent.openSettingsIfNotConfigured(env.getProject());
+		boolean b = MyConfigurable.openSettingsIfNotConfigured(env.getProject());
 		if (!b) {
 			return;
 		}
