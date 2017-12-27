@@ -1,6 +1,5 @@
 package krasa.visualvm.runner;
 
-import com.google.common.base.Objects;
 import com.intellij.debugger.impl.GenericDebuggerRunnerSettings;
 import krasa.visualvm.VisualVMHelper;
 
@@ -23,10 +22,11 @@ public class VisualVMGenericDebuggerRunnerSettings extends GenericDebuggerRunner
 		visualVMId = VisualVMHelper.getNextID();
 	}
 
+
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this)
-				.add("visualVMId", visualVMId)
-				.toString();
+		return "VisualVMGenericDebuggerRunnerSettings{" +
+			"visualVMId=" + visualVMId +
+			"} " + super.toString();
 	}
 }

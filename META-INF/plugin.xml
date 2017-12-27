@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.8.138.2210</version>
+	<version>1.9.138.2210</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.9 (2017-12-27)
+        <br>- IntelliJ 2018 compatibility
         <br>1.8 (2016-05-17)
         <br>- IntelliJ 2016 compatibility
         <br>1.7 (2014-09-20)
