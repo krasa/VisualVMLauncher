@@ -1,24 +1,14 @@
 package krasa.visualvm;
 
-import javax.swing.*;
-
-import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import org.jetbrains.annotations.NotNull;
 
-@State(name = "VisualVMLauncher", storages = {@Storage(id = "VisualVMLauncher", file = "$APP_CONFIG$/VisualVMLauncher.xml")})
+@State(name = "VisualVMLauncher", storages = {@Storage(file = "$APP_CONFIG$/VisualVMLauncher.xml")})
 public class ApplicationSettingsComponent implements ApplicationComponent,
 		PersistentStateComponent<PluginSettings> {
 	private static final Logger log = Logger.getInstance(ApplicationSettingsComponent.class.getName());
