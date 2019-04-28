@@ -8,7 +8,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
-@State(name = "VisualVMLauncher", storages = {@Storage("$APP_CONFIG$/VisualVMLauncher.xml")})
+@State(name = "VisualVMLauncher", storages = {@Storage("VisualVMLauncher.xml")})
 public class ApplicationSettingsComponent implements ApplicationComponent,
 		PersistentStateComponent<PluginSettings> {
 	private static final Logger log = Logger.getInstance(ApplicationSettingsComponent.class.getName());
