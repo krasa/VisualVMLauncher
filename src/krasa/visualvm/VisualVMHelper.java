@@ -32,45 +32,35 @@ import com.intellij.openapi.diagnostic.Logger;
 import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
 import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.StringTokenizer;
 
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
 
 	public static void startVisualVM(long appId, String jdkHome, final Object thisInstance) {
-		String visualVmHome = getVisualVmHome();
-		String debug = "appId=" + appId + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
+		String debug = "appId=" + appId + ", jdkHome=" + jdkHome;
 		try {
-			VisualVMHelper.openInVisualVM(appId, visualVmHome, jdkHome, thisInstance);
+			VisualVMHelper.openInVisualVM(appId, jdkHome, thisInstance);
 		} catch (IOException e) {
 			throw new RuntimeException(debug, e);
 		}
 	}
 
 	public static void startVisualVM(VisualVMGenericDebuggerRunnerSettings genericDebuggerRunnerSettings, Object thisInstance) {
-		String visualVmHome = getVisualVmHome();
-		String jdkHome = null;
-		String debug = "appId=" + genericDebuggerRunnerSettings.getVisualVMId() + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
+		String debug = "appId=" + genericDebuggerRunnerSettings.getVisualVMId();
 		try {
-			VisualVMHelper.openInVisualVM(genericDebuggerRunnerSettings.getVisualVMId(), visualVmHome, jdkHome, thisInstance);
+			VisualVMHelper.openInVisualVM(genericDebuggerRunnerSettings.getVisualVMId(), null, thisInstance);
 		} catch (IOException e) {
 			throw new RuntimeException(debug, e);
 		}
 	}
 
 	public static void startVisualVM(VisualVMGenericRunnerSettings runnerSettings, Object thisInstance) {
-		String visualVmHome = getVisualVmHome();
-		String jdkHome = null;
-		String debug = "appId=" + runnerSettings.getVisualVMId() + ", jdkHome=" + jdkHome + ", visualVmHome=" + visualVmHome;
+		String debug = "appId=" + runnerSettings.getVisualVMId();
 		try {
-			VisualVMHelper.openInVisualVM(runnerSettings.getVisualVMId(), visualVmHome, jdkHome, thisInstance);
+			VisualVMHelper.openInVisualVM(runnerSettings.getVisualVMId(), null, thisInstance);
 		} catch (IOException e) {
 			throw new RuntimeException(debug, e);
 		}
@@ -108,16 +98,17 @@ public final class VisualVMHelper {
 		return new String[]{"-Dvisualvm.id=" + id};
 	}
 
-	@Nullable
-	public static String getVisualVmHome() {
-		return ApplicationSettingsComponent.getInstance().getVisualVmHome();
-	}
-
-	public static void openInVisualVM(long id, String visualVmPath, String jdkHome, Object thisInstance) throws IOException {
+	public static void openInVisualVM(long id, String jdkHome, Object thisInstance) throws IOException {
+		String visualVmPath = ApplicationSettingsComponent.getInstance().getState().getVisualVmExecutable();
+		String configuredJdkHome = ApplicationSettingsComponent.getInstance().getState().getJdkHome();
+		if (StringUtils.isNotBlank(configuredJdkHome)) {
+			jdkHome = configuredJdkHome;
+		}
+		
 		if (!isValidPath(visualVmPath)) {
 			final Notification notification = new Notification("VisualVMLauncher", "",
-					"Path to VisualVM is not valid, path='" + visualVmPath + "'",
-					NotificationType.ERROR);
+				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
+				NotificationType.ERROR);
 			ApplicationManager.getApplication().invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -126,11 +117,11 @@ public final class VisualVMHelper {
 			});
 		} else {
 			LogHelper.print("starting VisualVM with id=" + id, thisInstance);
-			if (jdkHome == null) {
+			if (StringUtils.isBlank(jdkHome)) {
 				Runtime.getRuntime().exec(new String[]{visualVmPath, "--openid", String.valueOf(id)});
 			} else {
 				Runtime.getRuntime().exec(
-						new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id)});
+					new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id)});
 			}
 		}
 	}

@@ -1,28 +1,26 @@
 package krasa.visualvm;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import java.text.NumberFormat;
-import java.text.ParseException;
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-
-import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
-
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.NumberFormat;
 
 public class SettingsDialog {
 	private JTextField visualVmExecutable;
@@ -33,6 +31,8 @@ public class SettingsDialog {
 	private JFormattedTextField duration;
 	private JLabel durationLabel;
 	private JFormattedTextField delayForStgartingVisualVM;
+	private JTextField jdkHome;
+	private JButton browseJdkHome;
 
 	public SettingsDialog() {
 		super();
@@ -45,6 +45,22 @@ public class SettingsDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				browseForFile(visualVmExecutable);
+			}
+		});
+		browseJdkHome.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JavaSdk instance = com.intellij.openapi.projectRoots.impl.JavaSdkImpl.getInstance();
+
+				String text = jdkHome.getText();
+				final VirtualFile toSelect = StringUtils.isBlank(text) ? SdkConfigurationUtil.getSuggestedSdkRoot(instance) : LocalFileSystem.getInstance().findFileByPath(text);
+
+				Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+				VirtualFile file = FileChooser.chooseFile(instance.getHomeChooserDescriptor(), defaultProject, toSelect);
+				if (file != null) {
+					jdkHome.setText(file.getPath());
+				}
 			}
 		});
 		visualVmExecutable.getDocument().addDocumentListener(new DocumentListener() {
@@ -76,6 +92,7 @@ public class SettingsDialog {
 		});
 	}
 
+
 	private DefaultFormatterFactory getDefaultFormatterFactory() {
 		NumberFormatter defaultFormat = new NumberFormatter();
 		NumberFormat integerInstance = NumberFormat.getIntegerInstance();
@@ -92,7 +109,7 @@ public class SettingsDialog {
 		descriptor.setTitle("Select VisualVM home");
 		String text = target.getText();
 		final VirtualFile toSelect = text == null || text.isEmpty() ? null
-				: LocalFileSystem.getInstance().findFileByPath(text);
+			: LocalFileSystem.getInstance().findFileByPath(text);
 
 		// 10.5 does not have #chooseFile
 		Project defaultProject = ProjectManager.getInstance().getDefaultProject();
@@ -116,11 +133,17 @@ public class SettingsDialog {
 		return rootComponent;
 	}
 
+	public void setDataCustom(PluginSettings settings) {
+		setData(settings);
+		setValidationMessage(settings.getVisualVmExecutable());
+	}
+
 	public void setData(PluginSettings data) {
 		visualVmExecutable.setText(data.getVisualVmExecutable());
 		duration.setText(data.getDurationToSetContextToButton());
 		delayForStgartingVisualVM.setText(data.getDelayForVisualVMStart());
 		debugCheckBox.setSelected(data.getDebug());
+		jdkHome.setText(data.getJdkHome());
 	}
 
 	public void getData(PluginSettings data) {
@@ -128,6 +151,7 @@ public class SettingsDialog {
 		data.setDurationToSetContextToButton(duration.getText());
 		data.setDelayForVisualVMStart(delayForStgartingVisualVM.getText());
 		data.setDebug(debugCheckBox.isSelected());
+		data.setJdkHome(jdkHome.getText());
 	}
 
 	public boolean isModified(PluginSettings data) {
@@ -138,11 +162,8 @@ public class SettingsDialog {
 		if (delayForStgartingVisualVM.getText() != null ? !delayForStgartingVisualVM.getText().equals(data.getDelayForVisualVMStart()) : data.getDelayForVisualVMStart() != null)
 			return true;
 		if (debugCheckBox.isSelected() != data.getDebug()) return true;
+		if (jdkHome.getText() != null ? !jdkHome.getText().equals(data.getJdkHome()) : data.getJdkHome() != null)
+			return true;
 		return false;
-	}
-
-	public void setDataCustom(PluginSettings settings) {
-		setData(settings);
-		setValidationMessage(settings.getVisualVmExecutable());
 	}
 }

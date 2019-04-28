@@ -6,6 +6,8 @@ import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.JavaProgramPatcher;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTypeId;
 import krasa.visualvm.action.StartVisualVMConsoleAction;
 
 public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
@@ -35,7 +37,13 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 		String jdkPath = null;
 		try {
 			if (javaParameters.getJdk() != null && javaParameters.getJdk().getHomeDirectory() != null) {
-				jdkPath = javaParameters.getJdkPath();
+				Sdk jdk = javaParameters.getJdk();
+				SdkTypeId sdkType = jdk.getSdkType();
+				if ("IDEA JDK".equals(sdkType.getName())) {
+					jdkPath = null;
+				} else {
+					jdkPath = javaParameters.getJdkPath();
+				} 
 			}
 		} catch (CantRunException e) {
 			// return;

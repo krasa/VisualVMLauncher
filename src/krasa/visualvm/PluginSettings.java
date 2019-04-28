@@ -6,6 +6,7 @@ public class PluginSettings {
 	private boolean debug;
 	private String durationToSetContextToButton = "5000";
 	private String delayForVisualVMStart = "5000";
+	private String jdkHome;
 
 	public String getVisualVmExecutable() {
 		return visualVmExecutable;
@@ -50,5 +51,14 @@ public class PluginSettings {
 
 	public long getDelayForVisualVMStartAsLong() {
 		return Long.parseLong(delayForVisualVMStart);
+	}
+
+
+	public String getJdkHome() {
+		return jdkHome;
+	}
+
+	public void setJdkHome(final String jdkHome) {
+		this.jdkHome = jdkHome;
 	}
 }
