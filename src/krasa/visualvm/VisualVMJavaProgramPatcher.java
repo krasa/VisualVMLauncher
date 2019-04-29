@@ -39,9 +39,7 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 			if (javaParameters.getJdk() != null && javaParameters.getJdk().getHomeDirectory() != null) {
 				Sdk jdk = javaParameters.getJdk();
 				SdkTypeId sdkType = jdk.getSdkType();
-				if ("IDEA JDK".equals(sdkType.getName())) {
-					jdkPath = null;
-				} else {
+				if ("JavaSDK".equals(sdkType.getName())) {
 					jdkPath = javaParameters.getJdkPath();
 				} 
 			}
