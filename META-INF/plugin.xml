@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.11.182.000.1</version>
+	<version>1.12.182.000.0</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.12 (2019-04-29)
+        <br>- settings for tab on which VisualVM should open
         <br>1.11 (2019-04-28)
         <br>- jdkhome settings
         <br>1.10 (2018-06-20)

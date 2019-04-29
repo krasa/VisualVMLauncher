@@ -1,7 +1,5 @@
 package krasa.visualvm;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 import com.intellij.openapi.diagnostic.Logger;
 import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
 import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
@@ -36,7 +34,9 @@ public class VisualVMContext {
 	}
 
 	public void save() {
-		log.info("saving context: " + this.toString());
+		if (log.isDebugEnabled()) {
+			log.debug("saving context: " + this.toString());
+		}
 		VisualVMContext.currentlyExecuted = this;
 	}
 

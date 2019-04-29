@@ -43,6 +43,5 @@ public class ApplicationSettingsComponent implements ApplicationComponent,
 
 	public void loadState(PluginSettings state) {
 		this.settings = state;
-		LogHelper.debug = settings.getDebug();
 	}
 }

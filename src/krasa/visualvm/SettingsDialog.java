@@ -27,12 +27,13 @@ public class SettingsDialog {
 	private JComponent rootComponent;
 	private JButton browseButton;
 	private JLabel validationMessageLabel;
-	private JCheckBox debugCheckBox;
 	private JFormattedTextField duration;
 	private JLabel durationLabel;
 	private JFormattedTextField delayForStgartingVisualVM;
 	private JTextField jdkHome;
 	private JButton browseJdkHome;
+	private JCheckBox openOnTabForCheckBox;
+	private JTextField tabIndex;
 
 	public SettingsDialog() {
 		super();
@@ -142,16 +143,18 @@ public class SettingsDialog {
 		visualVmExecutable.setText(data.getVisualVmExecutable());
 		duration.setText(data.getDurationToSetContextToButton());
 		delayForStgartingVisualVM.setText(data.getDelayForVisualVMStart());
-		debugCheckBox.setSelected(data.getDebug());
 		jdkHome.setText(data.getJdkHome());
+		openOnTabForCheckBox.setSelected(data.isUseTabIndex());
+		tabIndex.setText(data.getTabIndex());
 	}
 
 	public void getData(PluginSettings data) {
 		data.setVisualVmExecutable(visualVmExecutable.getText());
 		data.setDurationToSetContextToButton(duration.getText());
 		data.setDelayForVisualVMStart(delayForStgartingVisualVM.getText());
-		data.setDebug(debugCheckBox.isSelected());
 		data.setJdkHome(jdkHome.getText());
+		data.setUseTabIndex(openOnTabForCheckBox.isSelected());
+		data.setTabIndex(tabIndex.getText());
 	}
 
 	public boolean isModified(PluginSettings data) {
@@ -161,8 +164,10 @@ public class SettingsDialog {
 			return true;
 		if (delayForStgartingVisualVM.getText() != null ? !delayForStgartingVisualVM.getText().equals(data.getDelayForVisualVMStart()) : data.getDelayForVisualVMStart() != null)
 			return true;
-		if (debugCheckBox.isSelected() != data.getDebug()) return true;
 		if (jdkHome.getText() != null ? !jdkHome.getText().equals(data.getJdkHome()) : data.getJdkHome() != null)
+			return true;
+		if (openOnTabForCheckBox.isSelected() != data.isUseTabIndex()) return true;
+		if (tabIndex.getText() != null ? !tabIndex.getText().equals(data.getTabIndex()) : data.getTabIndex() != null)
 			return true;
 		return false;
 	}

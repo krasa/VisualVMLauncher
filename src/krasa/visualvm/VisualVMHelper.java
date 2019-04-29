@@ -33,61 +33,23 @@ import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
 import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.*;
-import java.util.StringTokenizer;
+import java.io.File;
+import java.io.IOException;
 
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
 
 	public static void startVisualVM(long appId, String jdkHome, final Object thisInstance) {
-		String debug = "appId=" + appId + ", jdkHome=" + jdkHome;
-		try {
-			VisualVMHelper.openInVisualVM(appId, jdkHome, thisInstance);
-		} catch (IOException e) {
-			throw new RuntimeException(debug, e);
-		}
+		VisualVMHelper.openInVisualVM(appId, jdkHome, thisInstance);
 	}
 
 	public static void startVisualVM(VisualVMGenericDebuggerRunnerSettings genericDebuggerRunnerSettings, Object thisInstance) {
-		String debug = "appId=" + genericDebuggerRunnerSettings.getVisualVMId();
-		try {
-			VisualVMHelper.openInVisualVM(genericDebuggerRunnerSettings.getVisualVMId(), null, thisInstance);
-		} catch (IOException e) {
-			throw new RuntimeException(debug, e);
-		}
+		VisualVMHelper.openInVisualVM(genericDebuggerRunnerSettings.getVisualVMId(), null, thisInstance);
 	}
 
 	public static void startVisualVM(VisualVMGenericRunnerSettings runnerSettings, Object thisInstance) {
-		String debug = "appId=" + runnerSettings.getVisualVMId();
-		try {
-			VisualVMHelper.openInVisualVM(runnerSettings.getVisualVMId(), null, thisInstance);
-		} catch (IOException e) {
-			throw new RuntimeException(debug, e);
-		}
-	}
+		VisualVMHelper.openInVisualVM(runnerSettings.getVisualVMId(), null, thisInstance);
 
-	private static class SpecVersion {
-		int major, minor;
-
-		public SpecVersion(String specString) {
-			StringTokenizer st = new StringTokenizer(specString, ".");
-			if (st.hasMoreTokens()) {
-				major = Integer.parseInt(st.nextToken());
-			}
-			if (st.hasMoreTokens()) {
-				minor = Integer.parseInt(st.nextToken());
-			}
-		}
-
-		@Override
-		public String toString() {
-			final StringBuilder sb = new StringBuilder();
-			sb.append("SpecVersion");
-			sb.append("{major=").append(major);
-			sb.append(", minor=").append(minor);
-			sb.append('}');
-			return sb.toString();
-		}
 	}
 
 	public static long getNextID() {
@@ -98,13 +60,20 @@ public final class VisualVMHelper {
 		return new String[]{"-Dvisualvm.id=" + id};
 	}
 
-	public static void openInVisualVM(long id, String jdkHome, Object thisInstance) throws IOException {
-		String visualVmPath = ApplicationSettingsComponent.getInstance().getState().getVisualVmExecutable();
-		String configuredJdkHome = ApplicationSettingsComponent.getInstance().getState().getJdkHome();
+	public static void openInVisualVM(long id, String jdkHome, Object thisInstance) {
+		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
+
+		String visualVmPath = state.getVisualVmExecutable();
+		String configuredJdkHome = state.getJdkHome();
 		if (StringUtils.isNotBlank(configuredJdkHome)) {
 			jdkHome = configuredJdkHome;
 		}
-		
+
+		String idString = String.valueOf(id);
+		if (state.isUseTabIndex()) {
+			idString += "@" + state.getTabIndex();
+		}
+		       
 		if (!isValidPath(visualVmPath)) {
 			final Notification notification = new Notification("VisualVMLauncher", "",
 				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
@@ -116,52 +85,25 @@ public final class VisualVMHelper {
 				}
 			});
 		} else {
-			LogHelper.print("starting VisualVM with id=" + id, thisInstance);
-			if (StringUtils.isBlank(jdkHome)) {
-				Runtime.getRuntime().exec(new String[]{visualVmPath, "--openid", String.valueOf(id)});
-			} else {
-				Runtime.getRuntime().exec(
-					new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", String.valueOf(id)});
+			LogHelper.print("starting VisualVM with id=" + idString, thisInstance);
+			try {
+				if (StringUtils.isBlank(jdkHome)) {
+					Runtime.getRuntime().exec(new String[]{visualVmPath, "--openid", String.valueOf(id)});
+				} else {
+					Runtime.getRuntime().exec(
+						new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", idString});
+				}
+			} catch (IOException e) {
+				throw new RuntimeException("visualVmPath=" + visualVmPath + " appId=" + idString + " jdkHome=" + jdkHome, e);
 			}
 		}
+
+
 	}
 
 	public static boolean isValidPath(String visualVmPath) {
 		return !StringUtils.isBlank(visualVmPath) && new File(visualVmPath).exists();
 	}
 
-	private static SpecVersion getJavaVersion(String jdkHome) {
-		try {
-			String javaCmd = jdkHome + File.separator + "bin" + File.separator + "java";
-			Process prc = Runtime.getRuntime().exec(new String[]{javaCmd, "-version"});
 
-			String version = getJavaVersion(prc.getErrorStream());
-			if (version == null) {
-				version = getJavaVersion(prc.getInputStream());
-			}
-			return new SpecVersion(version);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private static String getJavaVersion(InputStream is) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		try {
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.startsWith("java version")) {
-					int start = line.indexOf("\"");
-					int end = line.lastIndexOf("\"");
-					if (start > -1 && end > -1) {
-						return line.substring(start + 1, end);
-					}
-				}
-			}
-		} finally {
-			br.close();
-		}
-		return null;
-	}
 }

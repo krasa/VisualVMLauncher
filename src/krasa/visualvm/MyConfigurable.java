@@ -54,7 +54,6 @@ public class MyConfigurable implements Configurable {
 		PluginSettings settings = ApplicationSettingsComponent.getInstance().getState();
 		if (form != null) {
 			form.getData(settings);
-			LogHelper.debug = settings.getDebug();
 		}
 	}
 

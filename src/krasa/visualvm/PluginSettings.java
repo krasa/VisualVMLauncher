@@ -3,10 +3,11 @@ package krasa.visualvm;
 public class PluginSettings {
 
 	private String visualVmExecutable;
-	private boolean debug;
 	private String durationToSetContextToButton = "5000";
 	private String delayForVisualVMStart = "5000";
 	private String jdkHome;
+	private boolean useTabIndex;
+	private String tabIndex = "2";
 
 	public String getVisualVmExecutable() {
 		return visualVmExecutable;
@@ -14,14 +15,6 @@ public class PluginSettings {
 
 	public void setVisualVmExecutable(final String visualVmExecutable) {
 		this.visualVmExecutable = visualVmExecutable;
-	}
-
-	public boolean getDebug() {
-		return debug;
-	}
-
-	public void setDebug(boolean debug) {
-		this.debug = debug;
 	}
 
 
@@ -60,5 +53,21 @@ public class PluginSettings {
 
 	public void setJdkHome(final String jdkHome) {
 		this.jdkHome = jdkHome;
+	}
+
+	public boolean isUseTabIndex() {
+		return useTabIndex;
+	}
+
+	public void setUseTabIndex(final boolean useTabIndex) {
+		this.useTabIndex = useTabIndex;
+	}
+
+	public String getTabIndex() {
+		return tabIndex;
+	}
+
+	public void setTabIndex(final String tabIndex) {
+		this.tabIndex = tabIndex;
 	}
 }

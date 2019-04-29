@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="krasa.visualvm.SettingsDialog">
-  <grid id="27dc6" binding="rootComponent" layout-manager="GridLayoutManager" row-count="12" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="rootComponent" layout-manager="GridLayoutManager" row-count="13" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1607" height="338"/>
+      <xy x="20" y="20" width="817" height="369"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
       <component id="a337a" class="javax.swing.JLabel">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="VisualVM executable:"/>
@@ -18,7 +18,7 @@
       </component>
       <component id="4052c" class="javax.swing.JTextField" binding="visualVmExecutable" default-binding="true">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -26,7 +26,7 @@
       </component>
       <component id="816d9" class="javax.swing.JButton" binding="browseButton" default-binding="true">
         <constraints>
-          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Browse"/>
@@ -34,7 +34,7 @@
       </component>
       <component id="78b7a" class="javax.swing.JLabel" binding="validationMessageLabel">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="535" height="14"/>
           </grid>
         </constraints>
@@ -45,7 +45,7 @@
       </component>
       <component id="d63c7" class="javax.swing.JFormattedTextField" binding="duration">
         <constraints>
-          <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="535" height="20"/>
           </grid>
         </constraints>
@@ -53,58 +53,55 @@
       </component>
       <component id="5ad5e" class="javax.swing.JLabel" binding="durationLabel">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="604" height="16"/>
             <maximum-size width="500" height="-1"/>
           </grid>
         </constraints>
         <properties>
-          <text value="Duration for coupling of generated VisualVM ID to console action in ms"/>
+          <text value="Duration for coupling of generated VisualVM ID to console action in ms:"/>
           <toolTipText value="In case of executing tomcat, jetty or other bundled servers, there need to be special handling: the ID which is used as parameter for currently executed application must be set to console actions. However there is no direct way to do it, so it is set to all actions created within given interval ( too low will result in wrong ID in the action, too high will rewrite context for previous application's actions)"/>
         </properties>
       </component>
       <vspacer id="7c92">
         <constraints>
-          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="12" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+            <preferred-size width="604" height="14"/>
+          </grid>
         </constraints>
       </vspacer>
       <component id="f58ac" class="javax.swing.JLabel">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="604" height="16"/>
+          </grid>
         </constraints>
         <properties>
           <font style="1"/>
-          <text value="For bundled server integrations only: "/>
+          <text value="Workaround for bundled server integrations: "/>
         </properties>
       </component>
       <component id="f7c8d" class="javax.swing.JLabel">
         <constraints>
-          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="259" height="16"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="Delay for starting VisualVM in ms"/>
+          <text value="Delay for starting VisualVM in ms:"/>
         </properties>
       </component>
       <component id="19993" class="javax.swing.JFormattedTextField" binding="delayForStgartingVisualVM">
         <constraints>
-          <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="11" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="535" height="20"/>
           </grid>
         </constraints>
         <properties/>
       </component>
-      <component id="eb980" class="javax.swing.JCheckBox" binding="debugCheckBox" default-binding="true">
-        <constraints>
-          <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="535" height="24"/>
-          </grid>
-        </constraints>
-        <properties>
-          <text value="Debug"/>
-        </properties>
-      </component>
       <component id="7f4f3" class="javax.swing.JLabel">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="JDK home (--jdkhome parameter for VisualVM)"/>
@@ -112,7 +109,7 @@
       </component>
       <component id="30a2a" class="javax.swing.JTextField" binding="jdkHome">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -120,11 +117,35 @@
       </component>
       <component id="1a919" class="javax.swing.JButton" binding="browseJdkHome">
         <constraints>
-          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Browse"/>
         </properties>
+      </component>
+      <component id="57cbe" class="javax.swing.JCheckBox" binding="openOnTabForCheckBox" default-binding="true">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="259" height="18"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Open on a different tab (for VisualVM 1.3.9+):"/>
+        </properties>
+      </component>
+      <component id="c39a5" class="javax.swing.JTextField" binding="tabIndex">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="84b3a" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>
