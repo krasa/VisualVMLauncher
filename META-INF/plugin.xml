@@ -16,6 +16,7 @@
 	<change-notes><![CDATA[
         <br>1.12 (2019-04-29)
         <br>- settings for tab on which VisualVM should open
+        <br>- Jar Application support
         <br>1.11 (2019-04-28)
         <br>- jdkhome settings
         <br>1.10 (2018-06-20)
