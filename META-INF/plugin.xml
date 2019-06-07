@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.12.182.000.0</version>
+    <version>1.13.182.000.0</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,25 +14,27 @@
       ]]></description>
 
 	<change-notes><![CDATA[
-        <br>1.12 (2019-04-29)
+        <br>1.13
+        <br>- high resolution icons
+        <br>1.12
         <br>- settings for tab on which VisualVM should open
         <br>- Jar Application support
-        <br>1.11 (2019-04-28)
+        <br>1.11
         <br>- jdkhome settings
-        <br>1.10 (2018-06-20)
+        <br>1.10
         <br>- IntelliJ 2018.2 compatibility
-        <br>1.9 (2017-12-27)
+        <br>1.9
         <br>- IntelliJ 2018 compatibility
-        <br>1.8 (2016-05-17)
+        <br>1.8
         <br>- IntelliJ 2016 compatibility
-        <br>1.7 (2014-09-20)
+        <br>1.7
         <br>- IJ 14 API update
-        <br>1.6 (2014-08-11)
+        <br>1.6
         <br>- tool window icons fixed
-        <br>1.5.134 (2014-02-10)
+        <br>1.5.134
         <br>- API change
         <br>- NPE fix
-        <br>1.4 (2013-11-09)
+        <br>1.4
         <br>- IJ 13 API change
       	<br>...
         <br>0.1 (2012-11-05)
