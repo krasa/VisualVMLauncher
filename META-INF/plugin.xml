@@ -15,8 +15,8 @@
 
 	<change-notes><![CDATA[
         <br>1.13
-        <br>- high resolution icons
-        <br>1.12
+        <br>- high resolution icons - thanks to <a href="https://github.com/tan9">Pei-Tang Huang</a>
+        <br>1.12                                                     	
         <br>- settings for tab on which VisualVM should open
         <br>- Jar Application support
         <br>1.11
