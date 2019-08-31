@@ -70,5 +70,6 @@
 		<applicationConfigurable instance="krasa.visualvm.MyConfigurable" id="VisualVMLauncher" displayName="VisualVM Launcher" />
 	</extensions>
 
+	<depends>com.intellij.modules.java</depends>
 
 </idea-plugin>
