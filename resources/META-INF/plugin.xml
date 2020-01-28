@@ -44,7 +44,7 @@
 
 	<!--<idea-version since-build="132.637" until-build="134.000"/>-->
 	<!--<idea-version since-build="134.1007" until-build="138.2210"/>-->
-	<idea-version since-build="182.000" until-build="193.*"/>
+	<idea-version since-build="182.000" until-build="200.000"/>
 
 	<application-components>
 		<component>
