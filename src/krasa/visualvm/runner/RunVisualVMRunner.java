@@ -58,9 +58,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	}
 
 	@Override
-	public void execute(@NotNull final ExecutionEnvironment env, @Nullable final Callback callback)
-
-			throws ExecutionException {
+	public void execute(@NotNull final ExecutionEnvironment env) throws ExecutionException {
 		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
 		if (settings != null) {
 			settings.generateId();
@@ -73,7 +71,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		if (!b) {
 			return;
 		}
-		super.execute(env, callback);
+		super.execute(env);
 	}
 
 	@Override
@@ -83,7 +81,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		runVisualVM(env, state);
 		return runContentDescriptor;
 	}
-	
+
 	@Override
 	public void onProcessStarted(RunnerSettings settings, ExecutionResult executionResult) {
 		super.onProcessStarted(settings, executionResult);
@@ -92,7 +90,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	}
 
 	@Override
-	public void patch(JavaParameters javaParameters, RunnerSettings settings, RunProfile runProfile, final boolean beforeExecution) throws ExecutionException {
+	public void patch(JavaParameters javaParameters, RunnerSettings settings, RunProfile runProfile, final boolean beforeExecution) {
 
 		addVisualVMIdToJavaParameter(javaParameters, settings);
 		super.patch(javaParameters, settings, runProfile, beforeExecution);
@@ -100,7 +98,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 
 
 	/*used for tomcat and normal applications*/
-	private void addVisualVMIdToJavaParameter(JavaParameters javaParameters, RunnerSettings settings) throws ExecutionException {
+	private void addVisualVMIdToJavaParameter(JavaParameters javaParameters, RunnerSettings settings) {
 		final VisualVMGenericRunnerSettings runnerSettings = ((VisualVMGenericRunnerSettings) settings);
 		LogHelper.print("#addVisualVMIdToJavaParameter -Dvisualvm.id=" + runnerSettings.getVisualVMId(), this);
 		javaParameters.getVMParametersList().add("-Dvisualvm.id=" + runnerSettings.getVisualVMId());
@@ -112,7 +110,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		return new VisualVMGenericRunnerSettings();
 	}
 
-	private void runVisualVM(ExecutionEnvironment env, RunProfileState state) throws ExecutionException {
+	private void runVisualVM(ExecutionEnvironment env, RunProfileState state) {
 		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
 		// tomcat uses PatchedLocalState
 		if (state.getClass().getSimpleName().equals(Hacks.BUNDLED_SERVERS_RUN_PROFILE_STATE)) {
