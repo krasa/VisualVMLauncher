@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.13.182.000.2-logo</version>
+	<version>1.13.182.000.4</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -44,8 +44,8 @@
 
 	<!--<idea-version since-build="132.637" until-build="134.000"/>-->
 	<!--<idea-version since-build="134.1007" until-build="138.2210"/>-->
-	<idea-version since-build="182.000"/>
-	
+	<idea-version since-build="182.000" until-build="193.*"/>
+
 	<application-components>
 		<component>
 			<implementation-class>krasa.visualvm.ApplicationSettingsComponent</implementation-class>
