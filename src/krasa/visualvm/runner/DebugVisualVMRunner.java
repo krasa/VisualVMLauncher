@@ -1,19 +1,13 @@
 package krasa.visualvm.runner;
 
-import com.intellij.debugger.engine.DebuggerUtils;
-import com.intellij.debugger.impl.DebuggerManagerImpl;
 import com.intellij.debugger.impl.GenericDebuggerRunner;
-import com.intellij.debugger.settings.DebuggerSettings;
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
-import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.jar.JarApplicationConfiguration;
 import com.intellij.execution.remote.RemoteConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
 import krasa.visualvm.*;
 import krasa.visualvm.executor.DebugVisualVMExecutor;
 import org.jetbrains.annotations.NotNull;
@@ -57,19 +51,15 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 	public void patch(JavaParameters javaParameters, RunnerSettings settings, RunProfile runProfile, boolean beforeExecution)
 			throws ExecutionException {
 		LogHelper.print("#patch", this);
-		doPatch(javaParameters, settings);
-		runCustomPatchers(javaParameters, Executor.EXECUTOR_EXTENSION_NAME.findExtension(DefaultDebugExecutor.class), runProfile);
+		addVisualVMIdToJavaParameter(javaParameters, settings);
+		super.patch(javaParameters, settings, runProfile, beforeExecution);
 	}
 
 	/*is called for tomcat, but not normal application*/
-	private RemoteConnection doPatch(final JavaParameters javaParameters, final RunnerSettings settings) throws ExecutionException {
+	private void addVisualVMIdToJavaParameter(final JavaParameters javaParameters, final RunnerSettings settings) throws ExecutionException {
 		final VisualVMGenericDebuggerRunnerSettings debuggerSettings = ((VisualVMGenericDebuggerRunnerSettings) settings);
-		if (StringUtil.isEmpty(debuggerSettings.getDebugPort())) {
-			debuggerSettings.setDebugPort(DebuggerUtils.getInstance().findAvailableDebugAddress(debuggerSettings.getTransport() == DebuggerSettings.SOCKET_TRANSPORT));
-		}
 		LogHelper.print("#doPatch -Dvisualvm.id=" + debuggerSettings.getVisualVMId(), this);
 		javaParameters.getVMParametersList().add("-Dvisualvm.id=" + debuggerSettings.getVisualVMId());
-		return DebuggerManagerImpl.createDebugParameters(javaParameters, debuggerSettings, false);
 	}
 
 	@Nullable
