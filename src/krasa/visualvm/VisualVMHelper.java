@@ -60,6 +60,35 @@ public final class VisualVMHelper {
 		return new String[]{"-Dvisualvm.id=" + id};
 	}
 
+	public static void startVisualVM() {
+		String jdkHome = null;
+		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
+
+		String visualVmPath = state.getVisualVmExecutable();
+		String configuredJdkHome = state.getJdkHome();
+		if (StringUtils.isNotBlank(configuredJdkHome)) {
+			jdkHome = configuredJdkHome;
+		}
+		if (!isValidPath(visualVmPath)) {
+			final Notification notification = new Notification("VisualVMLauncher", "",
+					"Path to VisualVM is not valid, path='" + visualVmPath + "'",
+					NotificationType.ERROR);
+			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
+		} else {
+			try {
+				if (StringUtils.isBlank(jdkHome)) {
+					Runtime.getRuntime().exec(new String[]{visualVmPath});
+				} else {
+					Runtime.getRuntime().exec(
+							new String[]{visualVmPath, "--jdkhome", jdkHome});
+				}
+			} catch (IOException e) {
+				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome, e);
+			}
+		}
+
+	}
+
 	public static void openInVisualVM(long id, String jdkHome, Object thisInstance) {
 		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
 
@@ -73,11 +102,11 @@ public final class VisualVMHelper {
 		if (state.isUseTabIndex()) {
 			idString += "@" + state.getTabIndex();
 		}
-		       
+
 		if (!isValidPath(visualVmPath)) {
 			final Notification notification = new Notification("VisualVMLauncher", "",
-				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
-				NotificationType.ERROR);
+					"Path to VisualVM is not valid, path='" + visualVmPath + "'",
+					NotificationType.ERROR);
 			ApplicationManager.getApplication().invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -91,7 +120,7 @@ public final class VisualVMHelper {
 					Runtime.getRuntime().exec(new String[]{visualVmPath, "--openid", String.valueOf(id)});
 				} else {
 					Runtime.getRuntime().exec(
-						new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", idString});
+							new String[]{visualVmPath, "--jdkhome", jdkHome, "--openid", idString});
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("visualVmPath=" + visualVmPath + " appId=" + idString + " jdkHome=" + jdkHome, e);

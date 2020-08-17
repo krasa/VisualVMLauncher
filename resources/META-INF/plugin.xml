@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.13.201.000.2</version>
+	<version>1.14.201.000.0</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.14
+        <br>- main toolbar action
         <br>1.13
         <br>- high resolution icons - thanks to <a href="https://github.com/tan9">Pei-Tang Huang</a>
         <br>1.12                                                     	
@@ -57,6 +59,13 @@
 	</project-components>
 
 	<actions>
+		<action
+				id="krasa.visualvm.action.StartVisualVMMainToolbarAction"
+				class="krasa.visualvm.action.StartVisualVMMainToolbarAction"
+				icon="/krasa/visualvm/svg/console16.svg"
+				text="Open VisualVM">
+			<add-to-group group-id="MainToolBar" anchor="last"/>
+		</action>
 		<!-- Add your actions here -->
 	</actions>
 
