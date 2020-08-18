@@ -60,15 +60,10 @@ public final class VisualVMHelper {
 		return new String[]{"-Dvisualvm.id=" + id};
 	}
 
-	public static void startVisualVM() {
-		String jdkHome = null;
+	public static void startVisualVM(String jdkHome) {
 		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
 
 		String visualVmPath = state.getVisualVmExecutable();
-		String configuredJdkHome = state.getJdkHome();
-		if (StringUtils.isNotBlank(configuredJdkHome)) {
-			jdkHome = configuredJdkHome;
-		}
 		if (!isValidPath(visualVmPath)) {
 			final Notification notification = new Notification("VisualVMLauncher", "",
 					"Path to VisualVM is not valid, path='" + visualVmPath + "'",

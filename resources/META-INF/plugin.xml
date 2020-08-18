@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.14.201.000.0</version>
+	<version>1.14.201.000.1</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -9,8 +9,8 @@
 
 	<description><![CDATA[
      Launches VisualVM from within IDEA. <br/>
-     Use buttons from main toolbar to start VisualVM along with executed application, 
-     or button next to the console window of already started application. 
+     Use buttons from the main toolbar to start VisualVM along with executed application,
+     or button next to the console window of already started application.
       ]]></description>
 
 	<change-notes><![CDATA[
@@ -18,7 +18,7 @@
         <br>- main toolbar action
         <br>1.13
         <br>- high resolution icons - thanks to <a href="https://github.com/tan9">Pei-Tang Huang</a>
-        <br>1.12                                                     	
+        <br>1.12
         <br>- settings for tab on which VisualVM should open
         <br>- Jar Application support
         <br>1.11
@@ -63,7 +63,8 @@
 				id="krasa.visualvm.action.StartVisualVMMainToolbarAction"
 				class="krasa.visualvm.action.StartVisualVMMainToolbarAction"
 				icon="/krasa/visualvm/svg/console16.svg"
-				text="Open VisualVM">
+				text="Start VisualVM"
+				description="Open VisualVM with selectable JDK Home parameter">
 			<add-to-group group-id="MainToolBar" anchor="last"/>
 		</action>
 		<!-- Add your actions here -->
@@ -76,7 +77,8 @@
 		<executor implementation="krasa.visualvm.executor.DebugVisualVMExecutor"/>
 		<java.programPatcher implementation="krasa.visualvm.VisualVMJavaProgramPatcher"/>
 		<consoleActionsPostProcessor implementation="krasa.visualvm.VisualVMConsoleActionsPostProcessor"/>
-		<applicationConfigurable instance="krasa.visualvm.MyConfigurable" id="VisualVMLauncher" displayName="VisualVM Launcher" />
+		<applicationConfigurable instance="krasa.visualvm.MyConfigurable" id="VisualVMLauncher"
+								 displayName="VisualVM Launcher"/>
 	</extensions>
 
 	<depends>com.intellij.modules.java</depends>

@@ -107,10 +107,10 @@ public class SettingsDialog {
 		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
 		descriptor.setHideIgnored(true);
 
-		descriptor.setTitle("Select VisualVM home");
+		descriptor.setTitle("Select VisualVM Executable");
 		String text = target.getText();
 		final VirtualFile toSelect = text == null || text.isEmpty() ? null
-			: LocalFileSystem.getInstance().findFileByPath(text);
+				: LocalFileSystem.getInstance().findFileByPath(text);
 
 		// 10.5 does not have #chooseFile
 		Project defaultProject = ProjectManager.getInstance().getDefaultProject();
