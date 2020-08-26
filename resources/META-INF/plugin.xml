@@ -1,19 +1,21 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.14.201.000.1</version>
+	<version>1.15.201.000.0</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
 	</vendor>
 
 	<description><![CDATA[
-     Launches VisualVM from within IDEA. <br/>
+     <a href="https://visualvm.github.io/">VisualVM</a> integration.<br/>
      Use buttons from the main toolbar to start VisualVM along with executed application,
      or button next to the console window of already started application.
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.15
+        <br>- support for VisualVM 2.0.4+ <a href="https://visualvm.github.io/sourcessupport.html">GoToSource plugin</a>
         <br>1.14
         <br>- main toolbar action
         <br>1.13
@@ -68,6 +70,12 @@
 			<add-to-group group-id="MainToolBar" anchor="last"/>
 		</action>
 		<!-- Add your actions here -->
+		<!--		<action id="krasa.visualvm.action.DummyTestAction" class="krasa.visualvm.action.DummyTestAction"-->
+		<!--				icon="/krasa/visualvm/svg/console16.svg"-->
+		<!--				text="DummyTestAction">-->
+		<!--			<add-to-group group-id="MainToolBar" anchor="last"/>-->
+
+		<!--		</action>-->
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">

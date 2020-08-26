@@ -111,23 +111,27 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	}
 
 	private void runVisualVM(ExecutionEnvironment env, RunProfileState state) {
-		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
-		// tomcat uses PatchedLocalState
-		if (state.getClass().getSimpleName().equals(Hacks.BUNDLED_SERVERS_RUN_PROFILE_STATE)) {
-			LogHelper.print("#runVisualVMAsync " + settings.getVisualVMId(), this);
-			new Thread() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
-						VisualVMHelper.startVisualVM(settings, RunVisualVMRunner.this);
-					} catch (Exception e) {
-						log.error(e);
+		try {
+			final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
+			// tomcat uses PatchedLocalState
+			if (state.getClass().getSimpleName().equals(Hacks.BUNDLED_SERVERS_RUN_PROFILE_STATE)) {
+				LogHelper.print("#runVisualVMAsync " + settings.getVisualVMId(), this);
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
+							VisualVMHelper.startVisualVM(settings, RunVisualVMRunner.this, env.getProject());
+						} catch (Throwable e) {
+							log.error(e);
+						}
 					}
-				}
-			}.start();
-		} else {
-			VisualVMHelper.startVisualVM(settings, this);
+				}.start();
+			} else {
+				VisualVMHelper.startVisualVM(settings, this, env.getProject());
+			}
+		} catch (Throwable e) {
+			log.error(e);
 		}
 	}
 

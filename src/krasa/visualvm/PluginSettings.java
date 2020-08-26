@@ -8,6 +8,7 @@ public class PluginSettings {
 	private String jdkHome;
 	private boolean useTabIndex;
 	private String tabIndex = "2";
+	private boolean sourceRoots = false;
 
 	public String getVisualVmExecutable() {
 		return visualVmExecutable;
@@ -69,5 +70,13 @@ public class PluginSettings {
 
 	public void setTabIndex(final String tabIndex) {
 		this.tabIndex = tabIndex;
+	}
+
+	public boolean isSourceRoots() {
+		return sourceRoots;
+	}
+
+	public void setSourceRoots(final boolean sourceRoots) {
+		this.sourceRoots = sourceRoots;
 	}
 }

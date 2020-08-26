@@ -65,7 +65,7 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 	@Nullable
 	@Override
 	protected RunContentDescriptor createContentDescriptor(@NotNull RunProfileState state,
-			@NotNull ExecutionEnvironment environment) throws ExecutionException {
+														   @NotNull ExecutionEnvironment environment) throws ExecutionException {
 		LogHelper.print("#createContentDescriptor", this);
 		addVisualVMIdToJavaParameter(environment, state);
 		return super.createContentDescriptor(state, environment);
@@ -85,7 +85,7 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 	@Nullable
 	@Override
 	protected RunContentDescriptor attachVirtualMachine(RunProfileState state, @NotNull ExecutionEnvironment env,
-			RemoteConnection connection, boolean pollConnection) throws ExecutionException {
+														RemoteConnection connection, boolean pollConnection) throws ExecutionException {
 		RunContentDescriptor runContentDescriptor = super.attachVirtualMachine(state, env, connection, pollConnection);
 		LogHelper.print("#attachVirtualMachine", this);
 		runVisualVM(env, state);
@@ -93,26 +93,29 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 	}
 
 	private void runVisualVM(ExecutionEnvironment env, RunProfileState state) throws ExecutionException {
-		final VisualVMGenericDebuggerRunnerSettings debuggerSettings = ((VisualVMGenericDebuggerRunnerSettings) env.getRunnerSettings());
-		// tomcat uses PatchedLocalState
-		if (state.getClass().getSimpleName().equals(Hacks.BUNDLED_SERVERS_RUN_PROFILE_STATE)) {
-			LogHelper.print("#runVisualVM ExecutionEnvironment", this);
-			new Thread() {
-				@Override
-				public void run() {
-					LogHelper.print("#Thread run", this);
-					try {
-						Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
-						VisualVMHelper.startVisualVM(debuggerSettings, DebugVisualVMRunner.this);
-					} catch (Exception e) {
-						log.error(e);
+		try {
+			final VisualVMGenericDebuggerRunnerSettings debuggerSettings = ((VisualVMGenericDebuggerRunnerSettings) env.getRunnerSettings());
+			// tomcat uses PatchedLocalState
+			if (state.getClass().getSimpleName().equals(Hacks.BUNDLED_SERVERS_RUN_PROFILE_STATE)) {
+				LogHelper.print("#runVisualVM ExecutionEnvironment", this);
+				new Thread() {
+					@Override
+					public void run() {
+						LogHelper.print("#Thread run", this);
+						try {
+							Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
+							VisualVMHelper.startVisualVM(debuggerSettings, DebugVisualVMRunner.this, env.getProject());
+						} catch (Throwable e) {
+							log.error(e);
+						}
 					}
-				}
-			}.start();
-		} else {
-			VisualVMHelper.startVisualVM(debuggerSettings, this);
+				}.start();
+			} else {
+				VisualVMHelper.startVisualVM(debuggerSettings, this, env.getProject());
+			}
+		} catch (Throwable e) {
+			log.error(e);
 		}
-
 	}
 
 }
