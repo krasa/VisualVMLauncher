@@ -41,7 +41,7 @@ public class StartVisualVMMainToolbarAction extends DumbAwareAction {
 
 		homes.stream().sorted().forEach(o -> defaultActionGroup.add(new MyDumbAwareAction(o, o)));
 
-		ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup("Select JDK for --jdkhome", defaultActionGroup, e.getDataContext(), JBPopupFactory.ActionSelectionAid.ALPHA_NUMBERING, true, (Runnable) null, -1);
+		ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup("Select JDK for --jdkhome VisualVM parameter", defaultActionGroup, e.getDataContext(), JBPopupFactory.ActionSelectionAid.ALPHA_NUMBERING, true, (Runnable) null, -1);
 		InputEvent inputEvent = e.getInputEvent();
 		if (inputEvent != null) {
 			popup.showInCenterOf(inputEvent.getComponent());
