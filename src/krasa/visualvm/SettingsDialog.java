@@ -1,5 +1,6 @@
 package krasa.visualvm;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -9,6 +10,7 @@ import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.components.labels.LinkLabel;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,9 +37,13 @@ public class SettingsDialog {
 	private JCheckBox openOnTabForCheckBox;
 	private JTextField tabIndex;
 	private JCheckBox sourceRoots;
+	private LinkLabel linkLabel;
+	private JPanel donatePanel;
 
 	public SettingsDialog() {
 		super();
+		donatePanel.add(Donate.newDonateButton(donatePanel));
+
 		duration.setFormatterFactory(getDefaultFormatterFactory());
 		delayForStgartingVisualVM.setFormatterFactory(getDefaultFormatterFactory());
 
@@ -92,6 +98,10 @@ public class SettingsDialog {
 				});
 			}
 		});
+
+		linkLabel.setListener(
+				(aSource, aLinkData) -> BrowserUtil.browse((String) aLinkData),
+				"https://visualvm.github.io/sourcessupport.html");
 	}
 
 
