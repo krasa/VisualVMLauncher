@@ -195,14 +195,13 @@ public final class VisualVMHelper {
 
 		Dependencies dependencies = new Dependencies();
 
-		HashSet<Module> cycleProtection = new HashSet<>();
 		if (runConfigurationModule != null) {
-			addModuleDependencies(dependencies, runConfigurationModule, cycleProtection);
+			dependencies.addModuleDependencies(runConfigurationModule);
 		} else {
 			ModuleManager manager = ModuleManager.getInstance(project);
 			Module[] modules = manager.getModules();
 			for (Module module : modules) {
-				addModuleDependencies(dependencies, module, cycleProtection);
+				dependencies.addModuleDependencies(module);
 			}
 		}
 
@@ -238,38 +237,6 @@ public final class VisualVMHelper {
 		return runConfigurationModule;
 	}
 
-	private static void addModuleDependencies(Dependencies dependencies, Module module, Set<Module> cycleProtection) {
-		if (cycleProtection.contains(module)) {
-			return;
-		} else {
-			cycleProtection.add(module);
-		}
-
-		ModuleRootManager root = ModuleRootManager.getInstance(module);
-		OrderEntry[] orderEntries = root.getOrderEntries();
-		for (OrderEntry orderEntry : orderEntries) {
-			if (orderEntry instanceof ModuleOrderEntry) {
-				Module moduleDep = ((ModuleOrderEntry) orderEntry).getModule();
-				dependencies.addModule(moduleDep);
-				addModuleDependencies(dependencies, moduleDep, cycleProtection);
-			} else if (orderEntry instanceof ModuleSourceOrderEntry) {
-				Module module1 = ((ModuleSourceOrderEntry) orderEntry).getRootModel().getModule();
-				dependencies.addModule(module1);
-			} else {
-//				if (orderEntry instanceof LibraryOrderEntry || orderEntry instanceof InheritedJdkOrderEntry) {
-//
-//				} else {
-//					System.err.println();
-//				}
-				VirtualFile[] sources = orderEntry.getFiles(OrderRootType.SOURCES);
-				for (VirtualFile virtualFile : sources) {
-					dependencies.add(virtualFile);
-				}
-			}
-
-		}
-	}
-
 	private static String removeLastSeparator(String toString) {
 		if (toString.endsWith(";")) {
 			return toString.substring(0, toString.length() - 1);
@@ -281,18 +248,52 @@ public final class VisualVMHelper {
 		return !StringUtils.isBlank(visualVmPath) && new File(visualVmPath).exists();
 	}
 
-
 	private static class Dependencies {
-		MultiMap<String, String> map = new MultiMap<>();
-		Set<String> jars = new HashSet<>();
-		Set<SourceRoots> sourceRoots = new HashSet<>();
+
+		private MultiMap<String, String> jarsWithSubpaths = new MultiMap<>();
+		private Set<String> jars = new HashSet<>();
+		private Set<SourceRoots> sourceRoots = new HashSet<>();
+
+		private Set<Module> cycleProtection = new HashSet<>();
+
+		private void addModuleDependencies(Module module) {
+			if (cycleProtection.contains(module)) {
+				return;
+			} else {
+				cycleProtection.add(module);
+			}
+
+			ModuleRootManager root = ModuleRootManager.getInstance(module);
+			OrderEntry[] orderEntries = root.getOrderEntries();
+			for (OrderEntry orderEntry : orderEntries) {
+				if (orderEntry instanceof ModuleOrderEntry) {
+					Module moduleDep = ((ModuleOrderEntry) orderEntry).getModule();
+					addModule(moduleDep);
+					addModuleDependencies(moduleDep);
+				} else if (orderEntry instanceof ModuleSourceOrderEntry) {
+					Module module1 = ((ModuleSourceOrderEntry) orderEntry).getRootModel().getModule();
+					addModule(module1);
+				} else {
+					//				if (orderEntry instanceof LibraryOrderEntry || orderEntry instanceof InheritedJdkOrderEntry) {
+					//
+					//				} else {
+					//					System.err.println();
+					//				}
+					VirtualFile[] sources = orderEntry.getFiles(OrderRootType.SOURCES);
+					for (VirtualFile virtualFile : sources) {
+						add(virtualFile);
+					}
+				}
+
+			}
+		}
 
 		public void add(VirtualFile root) {
 			String path = root.getPath();
 			if (path.contains("!/")) {
-				String subpath = StringUtil.substringAfter(path, "!/");
 				String jar = StringUtil.substringBefore(path, "!/");
-				map.putValue(jar, subpath);
+				String subpath = StringUtil.substringAfter(path, "!/");
+				jarsWithSubpaths.putValue(jar, subpath);
 			} else {
 				jars.add(path);
 			}
@@ -316,7 +317,7 @@ public final class VisualVMHelper {
 				sb.append(";");
 			}
 
-			for (Map.Entry<String, Collection<String>> stringCollectionEntry : map.entrySet()) {
+			for (Map.Entry<String, Collection<String>> stringCollectionEntry : jarsWithSubpaths.entrySet()) {
 				String key = stringCollectionEntry.getKey();
 				Collection<String> value = stringCollectionEntry.getValue();
 				appendTo(sb, key, new HashSet<>(value));
@@ -355,7 +356,7 @@ public final class VisualVMHelper {
 				sourceRoot.appendTo(sb);
 			}
 
-			for (Map.Entry<String, Collection<String>> stringCollectionEntry : map.entrySet()) {
+			for (Map.Entry<String, Collection<String>> stringCollectionEntry : jarsWithSubpaths.entrySet()) {
 				sb.append("\n")
 					.append(stringCollectionEntry.getKey());
 				Collection<String> value = stringCollectionEntry.getValue();
@@ -372,7 +373,6 @@ public final class VisualVMHelper {
 
 			return sb.toString();
 		}
-
 
 	}
 
