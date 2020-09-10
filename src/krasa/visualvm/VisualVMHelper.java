@@ -33,12 +33,15 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.SourceFolder;
+import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkModificator;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.containers.MultiMap;
 import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
 import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
 import org.apache.commons.lang.StringUtils;
@@ -46,8 +49,7 @@ import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
@@ -79,8 +81,8 @@ public final class VisualVMHelper {
 		String visualVmPath = state.getVisualVmExecutable();
 		if (!isValidPath(visualVmPath)) {
 			final Notification notification = new Notification("VisualVMLauncher", "",
-					"Path to VisualVM is not valid, path='" + visualVmPath + "'",
-					NotificationType.ERROR);
+				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
+				NotificationType.ERROR);
 			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
 		} else {
 			try {
@@ -88,7 +90,7 @@ public final class VisualVMHelper {
 					Runtime.getRuntime().exec(new String[]{visualVmPath});
 				} else {
 					Runtime.getRuntime().exec(
-							new String[]{visualVmPath, "--jdkhome", jdkHome});
+						new String[]{visualVmPath, "--jdkhome", jdkHome});
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome, e);
@@ -113,8 +115,8 @@ public final class VisualVMHelper {
 
 		if (!isValidPath(visualVmPath)) {
 			final Notification notification = new Notification("VisualVMLauncher", "",
-					"Path to VisualVM is not valid, path='" + visualVmPath + "'",
-					NotificationType.ERROR);
+				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
+				NotificationType.ERROR);
 			ApplicationManager.getApplication().invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -147,12 +149,13 @@ public final class VisualVMHelper {
 				}
 			}
 
+			log.info("Starting VisualVM with parameters:" + cmds);
 			Runtime.getRuntime().exec(cmds.toArray(new String[0]));
 		} catch (IOException e) {
 			if (sourceRoots) {
 				boolean contains = e.getMessage().contains("The filename or extension is too long");
 				if (contains) {
-					log.error("Please disable 'Integrate with VisualVM-GoToSource plugin' option at 'File | Settings | Other Settings | VisualVM Launcher'", e);
+					log.error("Please disable 'Integrate with VisualVM-GoToSource plugin' option at 'File | Settings | Other Settings | VisualVM Launcher'.\nThe command was too long: " + cmds.toString().length(), e);
 					run(id, jdkHome, thisInstance, project, visualVmPath, idString, false);
 					return;
 				}
@@ -168,23 +171,50 @@ public final class VisualVMHelper {
 
 		ModuleManager manager = ModuleManager.getInstance(project);
 		Module[] modules = manager.getModules();
+		Dependencies dependencies = new Dependencies();
 
+
+		//TODO use only classpath module and JDK
 		for (Module module : modules) {
 			ModuleRootManager root = ModuleRootManager.getInstance(module);
 			ContentEntry[] contentEntries = root.getContentEntries();
 			for (ContentEntry contentEntry : contentEntries) {
 				new SourceRoots(contentEntry).appendTo(sb);
 			}
+			OrderEntry[] orderEntries = root.getOrderEntries();
+			for (OrderEntry orderEntry : orderEntries) {
+				if (orderEntry instanceof LibraryOrderEntry) {
+					VirtualFile[] sources = ((LibraryOrderEntry) orderEntry).getLibrary().getFiles(OrderRootType.SOURCES);
+					for (VirtualFile virtualFile : sources) {
+						dependencies.add(virtualFile);
+					}
+				}
+			}
+
 		}
+
+//		sb.append("C:\\Program Files\\Java\\jdk-11.0.3\\lib\\src.zip[subpaths=java.base:java.compiler:java.datatransfer:java.desktop:java.instrument:java.logging:java.management:java.management.rmi:java.naming:java.net.http:java.prefs:java.rmi:java.scripting:java.se:java.security.jgss:java.security.sasl:java.smartcardio:java.sql:java.sql.rowset:java.transaction.xa:java.xml:java.xml.crypto:jdk.accessibility:jdk.aot:jdk.attach:jdk.charsets:jdk.compiler:jdk.crypto.cryptoki:jdk.crypto.ec:jdk.crypto.mscapi:jdk.dynalink:jdk.editpad:jdk.hotspot.agent:jdk.httpserver:jdk.internal.ed:jdk.internal.jvmstat:jdk.internal.le:jdk.internal.opt:jdk.internal.vm.ci:jdk.internal.vm.compiler:jdk.internal.vm.compiler.management:jdk.jartool:jdk.javadoc:jdk.jcmd:jdk.jconsole:jdk.jdeps:jdk.jdi:jdk.jdwp.agent:jdk.jfr:jdk.jlink:jdk.jshell:jdk.jsobject:jdk.jstatd:jdk.localedata:jdk.management:jdk.management.agent:jdk.management.jfr:jdk.naming.dns:jdk.naming.rmi:jdk.net:jdk.pack:jdk.rmic:jdk.scripting.nashorn:jdk.scripting.nashorn.shell:jdk.sctp:jdk.security.auth:jdk.security.jgss:jdk.unsupported:jdk.unsupported.desktop:jdk.xml.dom:jdk.zipfs];");
+		Sdk projectSdk = ProjectRootManager.getInstance(project).getProjectSdk();
+		if (projectSdk.getSdkType() instanceof JavaSdk) {
+			SdkModificator sdkModificator = projectSdk.getSdkModificator();
+			VirtualFile[] roots = sdkModificator.getRoots(OrderRootType.SOURCES);
+
+			for (VirtualFile root : roots) {
+				dependencies.add(root);
+			}
+		}
+		dependencies.appendTo(sb);
+//
+
 		cmds.add("--source-roots");
-		cmds.add("\"" + sb.toString() + "\"");
+		cmds.add("\"" + removeLastSeparator(sb.toString()) + "\"");
 		// --source-viewer="c:\NetBeans\bin\netbeans {file}:{line}"
 		//https://www.jetbrains.com/help/idea/opening-files-from-command-line.html
 		cmds.add("--source-viewer");
 		String homePath = PathManager.getHomePath();
 		if (SystemInfo.isWindows) {
 			//idea.bat --line 42 C:\MyProject\scripts\numbers.js
-			cmds.add("\"" + homePath + "/bin/idea.bat --line {line} {file}" + "\"");
+			cmds.add("\"" + homePath + "\\bin\\idea.bat --line {line} {file}" + "\"");
 		} else if (SystemInfo.isMac) {
 			//idea --line <number> <path>
 			cmds.add("\"" + homePath + "/bin/idea --line {line} {file}" + "\"");
@@ -192,6 +222,13 @@ public final class VisualVMHelper {
 			//idea.sh --line <number> <path>
 			cmds.add("\"" + homePath + "/bin/idea.sh --line {line} {file}" + "\"");
 		}
+	}
+
+	private static String removeLastSeparator(String toString) {
+		if (toString.endsWith(";")) {
+			return toString.substring(0, toString.length() - 1);
+		}
+		return toString;
 	}
 
 	public static boolean isValidPath(String visualVmPath) {
@@ -234,9 +271,67 @@ public final class VisualVMHelper {
 					sb.append(relativePath);
 					sb.append(":");
 				}
+				removeLastSeparator(sb, ":");
 				sb.append("]");
 			}
 			sb.append(";");
 		}
 	}
+
+	private static class Dependencies {
+		MultiMap<String, String> map = new MultiMap<>();
+		Set<String> jars = new HashSet<>();
+
+		public void add(VirtualFile root) {
+			String path = root.getPath();
+			if (path.contains("!/")) {
+				String subpath = StringUtil.substringAfter(path, "!/");
+				String jar = StringUtil.substringBefore(path, "!/");
+				map.putValue(jar, subpath);
+			} else {
+				jars.add(path);
+			}
+		}
+
+		public void appendTo(StringBuilder sb) {
+			for (String jar : jars) {
+				sb.append(jar);
+				sb.append(";");
+			}
+
+			for (Map.Entry<String, Collection<String>> stringCollectionEntry : map.entrySet()) {
+				String key = stringCollectionEntry.getKey();
+				Collection<String> value = stringCollectionEntry.getValue();
+				appendTo(sb, key, new HashSet<>(value));
+			}
+		}
+
+
+		private void appendTo(StringBuilder sb, String key, Set<String> set) {
+			set.remove("");
+
+			if (set.isEmpty()) {
+				sb.append(key);
+			} else {
+				sb.append(key);
+
+				sb.append("[subpaths=");
+				for (String s : set) {
+					sb.append(s);
+					sb.append(":");
+				}
+				removeLastSeparator(sb, ":");
+				sb.append("]");
+			}
+			sb.append(";");
+		}
+	}
+
+
+	private static void removeLastSeparator(StringBuilder sb, String suffix) {
+		if (sb.toString().endsWith(suffix)) {
+			sb.setLength(sb.length() - 1);
+		}
+	}
+
 }
