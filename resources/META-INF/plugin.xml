@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.15.201.000.0</version>
+	<version>1.16.201.000.0</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.16
+        <br>- fixes for <a href="https://visualvm.github.io/sourcessupport.html">GoToSource plugin</a>
         <br>1.15
         <br>- support for VisualVM 2.0.4+ <a href="https://visualvm.github.io/sourcessupport.html">GoToSource plugin</a>
         <br>1.14

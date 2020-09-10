@@ -45,6 +45,7 @@ import com.intellij.util.containers.MultiMap;
 import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
 import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
 import java.io.File;
@@ -143,7 +144,7 @@ public final class VisualVMHelper {
 			cmds.add(String.valueOf(id));
 			if (sourceRoots) {
 				try {
-					addSourceRoots(project, cmds);
+					addSourcePluginParameters(project, cmds);
 				} catch (Throwable e) {
 					log.error(e);
 				}
@@ -164,50 +165,9 @@ public final class VisualVMHelper {
 		}
 	}
 
-	public static void addSourceRoots(Project project, List<String> cmds) {
-		//https://visualvm.github.io/sourcessupport.html
-		// --source-roots="c:\sources\root1;c:\sources\root2[subpaths=src:test\src]"
-		StringBuilder sb = new StringBuilder();
-
-		ModuleManager manager = ModuleManager.getInstance(project);
-		Module[] modules = manager.getModules();
-		Dependencies dependencies = new Dependencies();
-
-
-		//TODO use only classpath module and JDK
-		for (Module module : modules) {
-			ModuleRootManager root = ModuleRootManager.getInstance(module);
-			ContentEntry[] contentEntries = root.getContentEntries();
-			for (ContentEntry contentEntry : contentEntries) {
-				new SourceRoots(contentEntry).appendTo(sb);
-			}
-			OrderEntry[] orderEntries = root.getOrderEntries();
-			for (OrderEntry orderEntry : orderEntries) {
-				if (orderEntry instanceof LibraryOrderEntry) {
-					VirtualFile[] sources = ((LibraryOrderEntry) orderEntry).getLibrary().getFiles(OrderRootType.SOURCES);
-					for (VirtualFile virtualFile : sources) {
-						dependencies.add(virtualFile);
-					}
-				}
-			}
-
-		}
-
-//		sb.append("C:\\Program Files\\Java\\jdk-11.0.3\\lib\\src.zip[subpaths=java.base:java.compiler:java.datatransfer:java.desktop:java.instrument:java.logging:java.management:java.management.rmi:java.naming:java.net.http:java.prefs:java.rmi:java.scripting:java.se:java.security.jgss:java.security.sasl:java.smartcardio:java.sql:java.sql.rowset:java.transaction.xa:java.xml:java.xml.crypto:jdk.accessibility:jdk.aot:jdk.attach:jdk.charsets:jdk.compiler:jdk.crypto.cryptoki:jdk.crypto.ec:jdk.crypto.mscapi:jdk.dynalink:jdk.editpad:jdk.hotspot.agent:jdk.httpserver:jdk.internal.ed:jdk.internal.jvmstat:jdk.internal.le:jdk.internal.opt:jdk.internal.vm.ci:jdk.internal.vm.compiler:jdk.internal.vm.compiler.management:jdk.jartool:jdk.javadoc:jdk.jcmd:jdk.jconsole:jdk.jdeps:jdk.jdi:jdk.jdwp.agent:jdk.jfr:jdk.jlink:jdk.jshell:jdk.jsobject:jdk.jstatd:jdk.localedata:jdk.management:jdk.management.agent:jdk.management.jfr:jdk.naming.dns:jdk.naming.rmi:jdk.net:jdk.pack:jdk.rmic:jdk.scripting.nashorn:jdk.scripting.nashorn.shell:jdk.sctp:jdk.security.auth:jdk.security.jgss:jdk.unsupported:jdk.unsupported.desktop:jdk.xml.dom:jdk.zipfs];");
-		Sdk projectSdk = ProjectRootManager.getInstance(project).getProjectSdk();
-		if (projectSdk.getSdkType() instanceof JavaSdk) {
-			SdkModificator sdkModificator = projectSdk.getSdkModificator();
-			VirtualFile[] roots = sdkModificator.getRoots(OrderRootType.SOURCES);
-
-			for (VirtualFile root : roots) {
-				dependencies.add(root);
-			}
-		}
-		dependencies.appendTo(sb);
-//
-
+	public static void addSourcePluginParameters(Project project, List<String> cmds) {
 		cmds.add("--source-roots");
-		cmds.add("\"" + removeLastSeparator(sb.toString()) + "\"");
+		cmds.add("\"" + resolveSourceRoots(project) + "\"");
 		// --source-viewer="c:\NetBeans\bin\netbeans {file}:{line}"
 		//https://www.jetbrains.com/help/idea/opening-files-from-command-line.html
 		cmds.add("--source-viewer");
@@ -222,6 +182,58 @@ public final class VisualVMHelper {
 			//idea.sh --line <number> <path>
 			cmds.add("\"" + homePath + "/bin/idea.sh --line {line} {file}" + "\"");
 		}
+	}
+
+	@NotNull
+	private static String resolveSourceRoots(Project project) {
+		//https://visualvm.github.io/sourcessupport.html
+		// --source-roots="c:\sources\root1;c:\sources\root2[subpaths=src:test\src]"
+		StringBuilder sb = new StringBuilder();
+
+		ModuleManager manager = ModuleManager.getInstance(project);
+		Module[] modules = manager.getModules();
+		Dependencies dependencies = new Dependencies();
+
+
+		//TODO use only classpath module and JDK
+		for (Module module : modules) {
+			ModuleRootManager root = ModuleRootManager.getInstance(module);
+
+			//module roots
+			ContentEntry[] contentEntries = root.getContentEntries();
+			for (ContentEntry contentEntry : contentEntries) {
+				new SourceRoots(contentEntry).appendTo(sb);
+			}
+
+			//libraries
+			OrderEntry[] orderEntries = root.getOrderEntries();
+			for (OrderEntry orderEntry : orderEntries) {
+				if (orderEntry instanceof LibraryOrderEntry) {
+					VirtualFile[] sources = ((LibraryOrderEntry) orderEntry).getLibrary().getFiles(OrderRootType.SOURCES);
+					for (VirtualFile virtualFile : sources) {
+						dependencies.add(virtualFile);
+					}
+				}
+			}
+		}
+
+		//		sb.append("C:\\Program Files\\Java\\jdk-11.0.3\\lib\\src.zip[subpaths=java.base:java.compiler:java.datatransfer:java.desktop:java.instrument:java.logging:java.management:java.management.rmi:java.naming:java.net.http:java.prefs:java.rmi:java.scripting:java.se:java.security.jgss:java.security.sasl:java.smartcardio:java.sql:java.sql.rowset:java.transaction.xa:java.xml:java.xml.crypto:jdk.accessibility:jdk.aot:jdk.attach:jdk.charsets:jdk.compiler:jdk.crypto.cryptoki:jdk.crypto.ec:jdk.crypto.mscapi:jdk.dynalink:jdk.editpad:jdk.hotspot.agent:jdk.httpserver:jdk.internal.ed:jdk.internal.jvmstat:jdk.internal.le:jdk.internal.opt:jdk.internal.vm.ci:jdk.internal.vm.compiler:jdk.internal.vm.compiler.management:jdk.jartool:jdk.javadoc:jdk.jcmd:jdk.jconsole:jdk.jdeps:jdk.jdi:jdk.jdwp.agent:jdk.jfr:jdk.jlink:jdk.jshell:jdk.jsobject:jdk.jstatd:jdk.localedata:jdk.management:jdk.management.agent:jdk.management.jfr:jdk.naming.dns:jdk.naming.rmi:jdk.net:jdk.pack:jdk.rmic:jdk.scripting.nashorn:jdk.scripting.nashorn.shell:jdk.sctp:jdk.security.auth:jdk.security.jgss:jdk.unsupported:jdk.unsupported.desktop:jdk.xml.dom:jdk.zipfs];");
+		Sdk projectSdk = ProjectRootManager.getInstance(project).getProjectSdk();
+		if (projectSdk.getSdkType() instanceof JavaSdk) {
+			SdkModificator sdkModificator = projectSdk.getSdkModificator();
+			VirtualFile[] roots = sdkModificator.getRoots(OrderRootType.SOURCES);
+
+			for (VirtualFile root : roots) {
+				dependencies.add(root);
+			}
+		}
+		dependencies.appendTo(sb);
+
+		String sourceRoots = removeLastSeparator(sb.toString());
+		if (!SystemInfo.isWindows) {
+			sourceRoots = sourceRoots.replace(";", ":");
+		}
+		return sourceRoots;
 	}
 
 	private static String removeLastSeparator(String toString) {
