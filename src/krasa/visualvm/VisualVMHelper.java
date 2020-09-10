@@ -212,6 +212,9 @@ public final class VisualVMHelper {
 		if (!SystemInfo.isWindows) {
 			sourceRoots = sourceRoots.replace(";", ":");
 		}
+		if (SystemInfo.isWindows) {
+			sourceRoots = sourceRoots.replace("/", "\\");
+		}
 		return sourceRoots;
 	}
 
