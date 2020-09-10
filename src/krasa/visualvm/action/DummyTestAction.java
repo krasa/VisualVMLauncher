@@ -10,6 +10,6 @@ import java.util.ArrayList;
 public class DummyTestAction extends AnAction {
 	@Override
 	public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-		VisualVMHelper.addSourcePluginParameters(anActionEvent.getProject(), new ArrayList<>());
+		VisualVMHelper.addSourcePluginParameters(anActionEvent.getProject(), new ArrayList<>(), null);
 	}
 }

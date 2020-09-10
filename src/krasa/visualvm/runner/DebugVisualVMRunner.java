@@ -27,7 +27,7 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 		LogHelper.print("#execute", this);
 		final VisualVMGenericDebuggerRunnerSettings debuggerSettings = ((VisualVMGenericDebuggerRunnerSettings) environment.getRunnerSettings());
 		debuggerSettings.generateId();
-		new VisualVMContext(debuggerSettings).save();
+		new VisualVMContext(environment, debuggerSettings).save();
 
 		boolean b = MyConfigurable.openSettingsIfNotConfigured(environment.getProject());
 		if (!b) {
@@ -104,14 +104,14 @@ public class DebugVisualVMRunner extends GenericDebuggerRunner {
 						LogHelper.print("#Thread run", this);
 						try {
 							Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
-							VisualVMHelper.startVisualVM(debuggerSettings, DebugVisualVMRunner.this, env.getProject());
+							VisualVMHelper.startVisualVM(env, debuggerSettings, DebugVisualVMRunner.this, env.getProject());
 						} catch (Throwable e) {
 							log.error(e);
 						}
 					}
 				}.start();
 			} else {
-				VisualVMHelper.startVisualVM(debuggerSettings, this, env.getProject());
+				VisualVMHelper.startVisualVM(env, debuggerSettings, this, env.getProject());
 			}
 		} catch (Throwable e) {
 			log.error(e);

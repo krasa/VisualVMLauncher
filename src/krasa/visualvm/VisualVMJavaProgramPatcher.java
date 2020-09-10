@@ -24,16 +24,16 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 			if (System.currentTimeMillis() - lastExecution > 1000) {
 				LogHelper.print("patchJavaParameters com.intellij.javaee.run.configuration.CommonStrategy patching", this);
 
-				VisualVMContext visualVMContext = patch(javaParameters);
+				VisualVMContext visualVMContext = patch(configuration, javaParameters);
 				new StartVisualVMConsoleAction().setVisualVMContextToRecentlyCreated(visualVMContext);
 				lastExecution = System.currentTimeMillis();
 			}
 		} else {
-			patch(javaParameters);
+			patch(configuration, javaParameters);
 		}
 	}
 
-	private VisualVMContext patch(JavaParameters javaParameters) {
+	private VisualVMContext patch(RunProfile configuration, JavaParameters javaParameters) {
 		String jdkPath = null;
 		try {
 			if (javaParameters.getJdk() != null && javaParameters.getJdk().getHomeDirectory() != null) {
@@ -41,7 +41,7 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 				SdkTypeId sdkType = jdk.getSdkType();
 				if ("JavaSDK".equals(sdkType.getName())) {
 					jdkPath = javaParameters.getJdkPath();
-				} 
+				}
 			}
 		} catch (CantRunException e) {
 			// return;
@@ -53,7 +53,9 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 		for (String arg : VisualVMHelper.getJvmArgs(appId)) {
 			javaParameters.getVMParametersList().prepend(arg);
 		}
-		VisualVMContext visualVMContext = new VisualVMContext(appId, jdkPath);
+
+
+		VisualVMContext visualVMContext = new VisualVMContext(appId, jdkPath, VisualVMHelper.resolveModule(configuration));
 		visualVMContext.save();
 		return visualVMContext;
 	}

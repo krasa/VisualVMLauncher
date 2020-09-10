@@ -62,7 +62,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
 		if (settings != null) {
 			settings.generateId();
-			new VisualVMContext(settings).save();
+			new VisualVMContext(env, settings).save();
 		}
 
 		LogHelper.print("#execute", this);
@@ -121,14 +121,14 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 					public void run() {
 						try {
 							Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
-							VisualVMHelper.startVisualVM(settings, RunVisualVMRunner.this, env.getProject());
+							VisualVMHelper.startVisualVM(env, settings, RunVisualVMRunner.this, env.getProject());
 						} catch (Throwable e) {
 							log.error(e);
 						}
 					}
 				}.start();
 			} else {
-				VisualVMHelper.startVisualVM(settings, this, env.getProject());
+				VisualVMHelper.startVisualVM(env, settings, this, env.getProject());
 			}
 		} catch (Throwable e) {
 			log.error(e);
