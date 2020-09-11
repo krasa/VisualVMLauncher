@@ -135,7 +135,7 @@ public final class VisualVMHelper {
 				cmds.add(jdkHome);
 			}
 			cmds.add("--openid");
-			cmds.add(String.valueOf(id));
+			cmds.add(idString);
 			if (sourceRoots) {
 				try {
 					addSourcePluginParameters(project, cmds, module);
