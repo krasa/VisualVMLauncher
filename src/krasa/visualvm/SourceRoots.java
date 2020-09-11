@@ -12,6 +12,7 @@ import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
+import java.io.File;
 import java.util.*;
 
 public class SourceRoots {
@@ -37,9 +38,6 @@ public class SourceRoots {
 		dependencies.appendTo(sb);
 
 		String sourceRoots = removeLastSeparator(sb.toString());
-		if (!SystemInfo.isWindows) {
-			sourceRoots = sourceRoots.replace(";", ":");
-		}
 		if (SystemInfo.isWindows) {
 			sourceRoots = sourceRoots.replace("/", "\\");
 		}
@@ -47,7 +45,7 @@ public class SourceRoots {
 	}
 
 	private static String removeLastSeparator(String toString) {
-		if (toString.endsWith(";")) {
+		if (toString.endsWith(File.pathSeparator)) {
 			return toString.substring(0, toString.length() - 1);
 		}
 		return toString;
@@ -125,7 +123,7 @@ public class SourceRoots {
 
 			for (String jar : jars) {
 				sb.append(jar);
-				sb.append(";");
+				sb.append(File.pathSeparator);
 			}
 
 			for (Map.Entry<String, Collection<String>> stringCollectionEntry : jarsWithSubpaths.entrySet()) {
@@ -152,7 +150,7 @@ public class SourceRoots {
 				removeLastSeparator(sb, ":");
 				sb.append("]");
 			}
-			sb.append(";");
+			sb.append(File.pathSeparator);
 		}
 
 
@@ -225,7 +223,7 @@ public class SourceRoots {
 				removeLastSeparator(sb, ":");
 				sb.append("]");
 			}
-			sb.append(";");
+			sb.append(File.pathSeparator);
 		}
 
 		@Override
