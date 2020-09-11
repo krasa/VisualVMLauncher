@@ -42,7 +42,7 @@ public class StartVisualVMConsoleAction extends AnAction {
 		if (!MyConfigurable.openSettingsIfNotConfigured(e.getProject())) {
 			return;
 		}
-		VisualVMHelper.startVisualVM(visualVMContext.getAppId(), visualVMContext.getJdkPath(), this, e.getProject(), visualVMContext.getModule());
+		VisualVMHelper.startVisualVM(visualVMContext.getAppId(), visualVMContext.getJdkPath(), e.getProject(), visualVMContext.getModule(), this);
 	}
 
 	public void setVisualVMContext(VisualVMContext visualVMContext) {

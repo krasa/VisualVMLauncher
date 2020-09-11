@@ -9,6 +9,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import krasa.visualvm.action.StartVisualVMConsoleAction;
+import org.jetbrains.annotations.Nullable;
 
 public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 	private static final Logger log = Logger.getInstance(VisualVMJavaProgramPatcher.class.getName());
@@ -34,18 +35,7 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 	}
 
 	private VisualVMContext patch(RunProfile configuration, JavaParameters javaParameters) {
-		String jdkPath = null;
-		try {
-			if (javaParameters.getJdk() != null && javaParameters.getJdk().getHomeDirectory() != null) {
-				Sdk jdk = javaParameters.getJdk();
-				SdkTypeId sdkType = jdk.getSdkType();
-				if ("JavaSDK".equals(sdkType.getName())) {
-					jdkPath = javaParameters.getJdkPath();
-				}
-			}
-		} catch (CantRunException e) {
-			// return;
-		}
+		String jdkPath = getJdkPath(javaParameters);
 
 		VisualVMContext load = VisualVMContext.load();
 		String id = null;
@@ -68,6 +58,25 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 			visualVMContext.save();
 			return visualVMContext;
 		}
+	}
+
+	@Nullable
+	public static String getJdkPath(JavaParameters javaParameters) {
+		String jdkPath = null;
+		try {
+			if (javaParameters.getJdk() != null && javaParameters.getJdk().getHomeDirectory() != null) {
+				Sdk jdk = javaParameters.getJdk();
+				SdkTypeId sdkType = jdk.getSdkType();
+				if ("JavaSDK".equals(sdkType.getName())) {
+					jdkPath = javaParameters.getJdkPath();
+				}
+			}
+		} catch (CantRunException e) {
+			// return;
+		} catch (Throwable e) {
+			log.error(e);
+		}
+		return jdkPath;
 	}
 
 }

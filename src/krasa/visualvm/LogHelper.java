@@ -7,8 +7,12 @@ public class LogHelper {
 
 	public static void print(String x, Object thisInstance) {
 		if (log.isDebugEnabled()) {
-			System.out.println(thisInstance.getClass().getSimpleName() + ": " + x);
-			log.debug(thisInstance.getClass().getSimpleName() + ": " + x);
+			String simpleName = "LogHelper : ";
+			if (thisInstance != null) {
+				simpleName = thisInstance.getClass().getSimpleName() + ": ";
+			}
+			System.out.println(simpleName + x);
+			log.debug(simpleName + x);
 		}
 	}
 

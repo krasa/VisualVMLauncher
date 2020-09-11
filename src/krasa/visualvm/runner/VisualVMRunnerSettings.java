@@ -1,38 +1,12 @@
 package krasa.visualvm.runner;
 
-import com.intellij.openapi.util.DefaultJDOMExternalizer;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
-import krasa.visualvm.VisualVMHelper;
-import org.jdom.Element;
+public interface VisualVMRunnerSettings {
 
-public class VisualVMRunnerSettings implements JDOMExternalizable {
-	protected long visualVMId;
+	String getJdkHome();
 
-	public VisualVMRunnerSettings() {
-		visualVMId = VisualVMHelper.getNextID();
-	}
+	void setJdkHome(String jdkHome);
 
-	public long getVisualVMId() {
-		return visualVMId;
-	}
+	long getVisualVMId();
 
-	public void setVisualVMId(long visualVMId) {
-		this.visualVMId = visualVMId;
-	}
-
-	public void generateId() {
-		visualVMId = VisualVMHelper.getNextID();
-	}
-
-	@Override
-	public void readExternal(Element element) throws InvalidDataException {
-		DefaultJDOMExternalizer.readExternal(this, element);
-	}
-
-	@Override
-	public void writeExternal(Element element) throws WriteExternalException {
-		DefaultJDOMExternalizer.writeExternal(this, element);
-	}
+	void setVisualVMId(long visualVMId);
 }

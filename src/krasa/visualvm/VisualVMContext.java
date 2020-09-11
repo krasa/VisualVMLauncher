@@ -3,8 +3,7 @@ package krasa.visualvm;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
-import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
+import krasa.visualvm.runner.VisualVMRunnerSettings;
 
 /*dirty, but works*/
 public class VisualVMContext {
@@ -21,13 +20,9 @@ public class VisualVMContext {
 		this.module = module;
 	}
 
-	public VisualVMContext(ExecutionEnvironment env, VisualVMGenericDebuggerRunnerSettings debuggerSettings) {
+	public VisualVMContext(ExecutionEnvironment env, VisualVMRunnerSettings debuggerSettings) {
 		this.appId = debuggerSettings.getVisualVMId();
-		module = VisualVMHelper.resolveModule(env);
-	}
-
-	public VisualVMContext(ExecutionEnvironment env, VisualVMGenericRunnerSettings runnerSettings) {
-		this.appId = runnerSettings.getVisualVMId();
+		this.jdkPath = debuggerSettings.getJdkHome();
 		module = VisualVMHelper.resolveModule(env);
 	}
 

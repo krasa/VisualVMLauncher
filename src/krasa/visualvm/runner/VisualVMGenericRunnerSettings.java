@@ -7,13 +7,15 @@ import com.intellij.openapi.util.WriteExternalException;
 import krasa.visualvm.VisualVMHelper;
 import org.jdom.Element;
 
-public class VisualVMGenericRunnerSettings implements RunnerSettings {
+public class VisualVMGenericRunnerSettings implements RunnerSettings, VisualVMRunnerSettings {
 	protected long visualVMId;
+	protected String jdkHome;
 
 	public VisualVMGenericRunnerSettings() {
 		visualVMId = VisualVMHelper.getNextID();
 	}
 
+	@Override
 	public long getVisualVMId() {
 		return visualVMId;
 	}
@@ -24,6 +26,16 @@ public class VisualVMGenericRunnerSettings implements RunnerSettings {
 
 	public void generateId() {
 		visualVMId = VisualVMHelper.getNextID();
+	}
+
+	@Override
+	public String getJdkHome() {
+		return jdkHome;
+	}
+
+	@Override
+	public void setJdkHome(String jdkHome) {
+		this.jdkHome = jdkHome;
 	}
 
 	@Override

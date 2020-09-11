@@ -37,8 +37,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import krasa.visualvm.runner.VisualVMGenericDebuggerRunnerSettings;
-import krasa.visualvm.runner.VisualVMGenericRunnerSettings;
+import krasa.visualvm.runner.VisualVMRunnerSettings;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
@@ -49,16 +48,12 @@ import java.util.List;
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
 
-	public static void startVisualVM(long appId, String jdkHome, final Object thisInstance, Project project, Module runConfigurationModule) {
+	public static void startVisualVM(long appId, String jdkHome, Project project, Module runConfigurationModule, final Object thisInstance) {
 		VisualVMHelper.openInVisualVM(appId, jdkHome, thisInstance, project, runConfigurationModule);
 	}
 
-	public static void startVisualVM(ExecutionEnvironment env, VisualVMGenericDebuggerRunnerSettings genericDebuggerRunnerSettings, Object thisInstance, Project project) {
-		startVisualVM(genericDebuggerRunnerSettings.getVisualVMId(), null, thisInstance, project, resolveModule(env));
-	}
-
-	public static void startVisualVM(ExecutionEnvironment env, VisualVMGenericRunnerSettings runnerSettings, Object thisInstance, Project project) {
-		startVisualVM(runnerSettings.getVisualVMId(), null, thisInstance, project, resolveModule(env));
+	public static void startVisualVM(ExecutionEnvironment env, VisualVMRunnerSettings runnerSettings, Object thisInstance) {
+		startVisualVM(runnerSettings.getVisualVMId(), runnerSettings.getJdkHome(), env.getProject(), resolveModule(env), thisInstance);
 
 	}
 

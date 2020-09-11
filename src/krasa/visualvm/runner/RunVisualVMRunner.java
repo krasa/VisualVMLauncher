@@ -40,7 +40,10 @@ import com.intellij.execution.remote.RemoteConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
-import krasa.visualvm.*;
+import krasa.visualvm.LogHelper;
+import krasa.visualvm.MyConfigurable;
+import krasa.visualvm.VisualVMContext;
+import krasa.visualvm.VisualVMJavaProgramPatcher;
 import krasa.visualvm.executor.RunVisualVMExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -78,7 +81,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env)
 			throws ExecutionException {
 		RunContentDescriptor runContentDescriptor = super.doExecute(state, env);
-		runVisualVM(env, state);
+		RunnerUtils.runVisualVM(this, env, state);
 		return runContentDescriptor;
 	}
 
@@ -102,6 +105,7 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		final VisualVMGenericRunnerSettings runnerSettings = ((VisualVMGenericRunnerSettings) settings);
 		LogHelper.print("#addVisualVMIdToJavaParameter -Dvisualvm.id=" + runnerSettings.getVisualVMId(), this);
 		javaParameters.getVMParametersList().add("-Dvisualvm.id=" + runnerSettings.getVisualVMId());
+		runnerSettings.setJdkHome(VisualVMJavaProgramPatcher.getJdkPath(javaParameters));
 	}
 
 	@Override
@@ -110,29 +114,5 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		return new VisualVMGenericRunnerSettings();
 	}
 
-	private void runVisualVM(ExecutionEnvironment env, RunProfileState state) {
-		try {
-			final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
-			// tomcat uses PatchedLocalState
-			if (state.getClass().getSimpleName().equals(Hacks.BUNDLED_SERVERS_RUN_PROFILE_STATE)) {
-				LogHelper.print("#runVisualVMAsync " + settings.getVisualVMId(), this);
-				new Thread() {
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(ApplicationSettingsComponent.getInstance().getState().getDelayForVisualVMStartAsLong());
-							VisualVMHelper.startVisualVM(env, settings, RunVisualVMRunner.this, env.getProject());
-						} catch (Throwable e) {
-							log.error(e);
-						}
-					}
-				}.start();
-			} else {
-				VisualVMHelper.startVisualVM(env, settings, this, env.getProject());
-			}
-		} catch (Throwable e) {
-			log.error(e);
-		}
-	}
 
 }
