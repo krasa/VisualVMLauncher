@@ -25,7 +25,7 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 				LogHelper.print("patchJavaParameters com.intellij.javaee.run.configuration.CommonStrategy patching", this);
 
 				VisualVMContext visualVMContext = patch(configuration, javaParameters);
-				new StartVisualVMConsoleAction().setVisualVMContextToRecentlyCreated(visualVMContext);
+				StartVisualVMConsoleAction.setVisualVMContextToRecentlyCreated(visualVMContext);
 				lastExecution = System.currentTimeMillis();
 			}
 		} else {
@@ -47,17 +47,27 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 			// return;
 		}
 
-		final Long appId = VisualVMHelper.getNextID();
-
-		LogHelper.print("Patching: jdkPath=" + jdkPath + "; appId=" + appId, this);
-		for (String arg : VisualVMHelper.getJvmArgs(appId)) {
-			javaParameters.getVMParametersList().prepend(arg);
+		VisualVMContext load = VisualVMContext.load();
+		String id = null;
+		if (load != null) {
+			Long appId = load.getAppId();
+			id = "-Dvisualvm.id=" + appId;
 		}
+		if (id != null && javaParameters.getVMParametersList().getParametersString().contains(id)) {
+			return load;
+		} else {
+			final Long appId = VisualVMHelper.getNextID();
+
+			LogHelper.print("Patching: jdkPath=" + jdkPath + "; appId=" + appId, this);
+			for (String arg : VisualVMHelper.getJvmArgs(appId)) {
+				javaParameters.getVMParametersList().prepend(arg);
+			}
 
 
-		VisualVMContext visualVMContext = new VisualVMContext(appId, jdkPath, VisualVMHelper.resolveModule(configuration));
-		visualVMContext.save();
-		return visualVMContext;
+			VisualVMContext visualVMContext = new VisualVMContext(appId, jdkPath, VisualVMHelper.resolveModule(configuration));
+			visualVMContext.save();
+			return visualVMContext;
+		}
 	}
 
 }

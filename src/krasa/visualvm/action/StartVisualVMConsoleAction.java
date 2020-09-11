@@ -59,23 +59,23 @@ public class StartVisualVMConsoleAction extends AnAction {
 		return created;
 	}
 
-	public void setVisualVMContextToRecentlyCreated(VisualVMContext visualVMContext) {
-		LogHelper.print("#setVisualVMContextToRecentlyCreated" + visualVMContext, this);
+	public static void setVisualVMContextToRecentlyCreated(VisualVMContext visualVMContext) {
+		LogHelper.print("#setVisualVMContextToRecentlyCreated" + visualVMContext, null);
 		Iterator<StartVisualVMConsoleAction> iterator = currentlyExecuted.iterator();
 		while (iterator.hasNext()) {
 			StartVisualVMConsoleAction next = iterator.next();
 			if (isRecentlyCreated(next)) {
 				next.setVisualVMContext(visualVMContext);
 			} else {
-				LogHelper.print("#setVisualVMContextToRecentlyCreated remove", this);
+				LogHelper.print("#setVisualVMContextToRecentlyCreated remove", null);
 				iterator.remove();
 			}
 		}
 	}
 
-	private boolean isRecentlyCreated(StartVisualVMConsoleAction next) {
+	private static boolean isRecentlyCreated(StartVisualVMConsoleAction next) {
 		long l = System.currentTimeMillis() - next.getCreated();
-		LogHelper.print("#isRecentlyCreated " + l + " " + next, this);
+		LogHelper.print("#isRecentlyCreated " + l + " " + next, null);
 		return l < ApplicationSettingsComponent.getInstance().getState().getDurationToSetContextToButtonAsLong();
 	}
 
