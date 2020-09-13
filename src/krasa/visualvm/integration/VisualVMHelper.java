@@ -24,7 +24,6 @@
  */
 package krasa.visualvm.integration;
 
-import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -48,21 +47,15 @@ import java.util.List;
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
 
-	public static void startVisualVM(long appId, String jdkHome, Project project, Module runConfigurationModule, final Object thisInstance) {
-		VisualVMHelper.openInVisualVM(appId, jdkHome, thisInstance, project, runConfigurationModule);
-	}
-
-	public static void startVisualVM(ExecutionEnvironment env, Object thisInstance) {
-		VisualVMContext load = VisualVMContext.load();
-		startVisualVM(load.getAppId(), load.getJdkPath(), env.getProject(), load.getModule(), thisInstance);
-
+	public static void startVisualVM(VisualVMContext vmContext, Project project, Object thisInstance) {
+		VisualVMHelper.openInVisualVM(vmContext.getAppId(), vmContext.getJdkPath(), vmContext.getModule(), project, thisInstance);
 	}
 
 	public static long getNextID() {
 		return System.nanoTime();
 	}
 
-	public static void startVisualVM(String jdkHome) {
+	public static void startVisualVM(String jdkHome_doNotOverride) {
 		PluginSettings state = ApplicationSettingsService.getInstance().getState();
 
 		String visualVmPath = state.getVisualVmExecutable();
@@ -73,26 +66,32 @@ public final class VisualVMHelper {
 			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
 		} else {
 			try {
-				if (StringUtils.isBlank(jdkHome)) {
+				if (StringUtils.isBlank(jdkHome_doNotOverride)) {
 					Runtime.getRuntime().exec(new String[]{visualVmPath});
 				} else {
 					Runtime.getRuntime().exec(
-						new String[]{visualVmPath, "--jdkhome", wrap(jdkHome)});
+						new String[]{visualVmPath, "--jdkhome", wrap(jdkHome_doNotOverride)});
 				}
 			} catch (IOException e) {
-				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome, e);
+				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome_doNotOverride, e);
 			}
 		}
 
 	}
 
-	public static void openInVisualVM(long id, String jdkHome, Object thisInstance, Project project, Module module) {
+	public static void openInVisualVM(long id, String jdkHome, Module module, Project project, Object thisInstance) {
 		PluginSettings pluginSettings = ApplicationSettingsService.getInstance().getState();
 
 		String visualVmPath = pluginSettings.getVisualVmExecutable();
-		String configuredJdkHome = pluginSettings.getJdkHome();
-		if (StringUtils.isNotBlank(configuredJdkHome)) {
-			jdkHome = configuredJdkHome;
+		String customJdkHome = pluginSettings.getJdkHome();
+		boolean useModuleJdk = pluginSettings.isUseModuleJdk();
+
+		if (useModuleJdk) {
+			if (StringUtils.isBlank(jdkHome)) {
+				jdkHome = customJdkHome;
+			}
+		} else {
+			jdkHome = customJdkHome;
 		}
 
 		String idString = String.valueOf(id);

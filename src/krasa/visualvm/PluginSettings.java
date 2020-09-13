@@ -11,6 +11,8 @@ public class PluginSettings {
 	private boolean useTabIndex;
 	private String tabIndex = "2";
 	private boolean sourceRoots = false;
+	private boolean useModuleJdk = true;
+
 
 	public String getVisualVmExecutable() {
 		return visualVmExecutable;
@@ -80,5 +82,13 @@ public class PluginSettings {
 
 	public void setSourceRoots(final boolean sourceRoots) {
 		this.sourceRoots = sourceRoots;
+	}
+
+	public boolean isUseModuleJdk() {
+		return useModuleJdk;
+	}
+
+	public void setUseModuleJdk(final boolean useModuleJdk) {
+		this.useModuleJdk = useModuleJdk;
 	}
 }

@@ -10,10 +10,13 @@ import com.intellij.execution.runners.JavaProgramPatcher;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkTypeId;
+import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import krasa.visualvm.Hacks;
 import krasa.visualvm.LogHelper;
 import krasa.visualvm.action.StartVisualVMConsoleAction;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
@@ -61,6 +64,15 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 				SdkTypeId sdkType = jdk.getSdkType();
 				if ("JavaSDK".equals(sdkType.getName())) {
 					jdkPath = javaParameters.getJdkPath();
+				} else if ("IDEA JDK".equals(sdkType.getName())) {
+					ProjectJdkImpl jdk1 = (ProjectJdkImpl) javaParameters.getJdk();
+					SdkAdditionalData sdkAdditionalData = jdk1.getSdkAdditionalData();
+					if (sdkAdditionalData != null) {
+						Object javaSdk = MethodUtils.invokeMethod(sdkAdditionalData, true, "getJavaSdk");
+						if (javaSdk instanceof Sdk) {
+							jdkPath = ((Sdk) javaSdk).getHomePath();
+						}
+					}
 				}
 			}
 		} catch (CantRunException e) {

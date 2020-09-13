@@ -8,6 +8,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import krasa.visualvm.ApplicationSettingsService;
 import krasa.visualvm.Hacks;
 import krasa.visualvm.LogHelper;
+import krasa.visualvm.integration.VisualVMContext;
 import krasa.visualvm.integration.VisualVMHelper;
 
 public class RunnerUtils {
@@ -24,14 +25,14 @@ public class RunnerUtils {
 						LogHelper.print("#Thread run", this);
 						try {
 							Thread.sleep(ApplicationSettingsService.getInstance().getState().getDelayForVisualVMStartAsLong());
-							VisualVMHelper.startVisualVM(env, runner);
+							VisualVMHelper.startVisualVM(VisualVMContext.load(), env.getProject(), runner);
 						} catch (Throwable e) {
 							log.error(e);
 						}
 					}
 				}.start();
 			} else {
-				VisualVMHelper.startVisualVM(env, runner);
+				VisualVMHelper.startVisualVM(VisualVMContext.load(), env.getProject(), runner);
 			}
 		} catch (Throwable e) {
 			log.error(e);

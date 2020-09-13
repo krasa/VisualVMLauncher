@@ -39,6 +39,7 @@ public class SettingsDialog {
 	private JCheckBox sourceRoots;
 	private LinkLabel linkLabel;
 	private JPanel donatePanel;
+	private JCheckBox useModuleJdk;
 
 	public SettingsDialog() {
 		super();
@@ -158,6 +159,7 @@ public class SettingsDialog {
 		openOnTabForCheckBox.setSelected(data.isUseTabIndex());
 		tabIndex.setText(data.getTabIndex());
 		sourceRoots.setSelected(data.isSourceRoots());
+		useModuleJdk.setSelected(data.isUseModuleJdk());
 	}
 
 	public void getData(PluginSettings data) {
@@ -168,6 +170,7 @@ public class SettingsDialog {
 		data.setUseTabIndex(openOnTabForCheckBox.isSelected());
 		data.setTabIndex(tabIndex.getText());
 		data.setSourceRoots(sourceRoots.isSelected());
+		data.setUseModuleJdk(useModuleJdk.isSelected());
 	}
 
 	public boolean isModified(PluginSettings data) {
@@ -183,6 +186,7 @@ public class SettingsDialog {
 		if (tabIndex.getText() != null ? !tabIndex.getText().equals(data.getTabIndex()) : data.getTabIndex() != null)
 			return true;
 		if (sourceRoots.isSelected() != data.isSourceRoots()) return true;
+		if (useModuleJdk.isSelected() != data.isUseModuleJdk()) return true;
 		return false;
 	}
 }
