@@ -14,7 +14,7 @@ public class MyConfigurable implements Configurable {
 	private SettingsDialog form;
 
 	public static boolean openSettingsIfNotConfigured(Project project) {
-		ApplicationSettingsComponent instance = ApplicationSettingsComponent.getInstance();
+		ApplicationSettingsService instance = ApplicationSettingsService.getInstance();
 		PluginSettings state = instance.getState();
 		boolean ok = true;
 		if (!PluginSettings.isValid(state)) {
@@ -47,18 +47,18 @@ public class MyConfigurable implements Configurable {
 	}
 
 	public boolean isModified() {
-		return form.isModified(ApplicationSettingsComponent.getInstance().getState());
+		return form.isModified(ApplicationSettingsService.getInstance().getState());
 	}
 
 	public void apply() throws ConfigurationException {
-		PluginSettings settings = ApplicationSettingsComponent.getInstance().getState();
+		PluginSettings settings = ApplicationSettingsService.getInstance().getState();
 		if (form != null) {
 			form.getData(settings);
 		}
 	}
 
 	public void reset() {
-		PluginSettings settings = ApplicationSettingsComponent.getInstance().getState();
+		PluginSettings settings = ApplicationSettingsService.getInstance().getState();
 		if (form != null) {
 			form.setDataCustom(settings);
 		}

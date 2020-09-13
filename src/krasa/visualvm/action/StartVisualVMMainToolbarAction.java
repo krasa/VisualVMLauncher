@@ -15,9 +15,9 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
-import krasa.visualvm.ApplicationSettingsComponent;
+import krasa.visualvm.ApplicationSettingsService;
 import krasa.visualvm.PluginSettings;
-import krasa.visualvm.VisualVMHelper;
+import krasa.visualvm.integration.VisualVMHelper;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +55,7 @@ public class StartVisualVMMainToolbarAction extends DumbAwareAction {
 	private Set<String> jdkHomes() {
 		Set<String> homes = new HashSet<>();
 
-		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
+		PluginSettings state = ApplicationSettingsService.getInstance().getState();
 		String configuredJdkHome = state.getJdkHome();
 		if (StringUtils.isNotBlank(configuredJdkHome)) {
 			homes.add(configuredJdkHome);
@@ -72,7 +72,7 @@ public class StartVisualVMMainToolbarAction extends DumbAwareAction {
 	}
 
 	private boolean checkVisualVmExecutable() {
-		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
+		PluginSettings state = ApplicationSettingsService.getInstance().getState();
 		String visualVmPath = state.getVisualVmExecutable();
 		if (org.apache.commons.lang3.StringUtils.isBlank(visualVmPath)) {
 			final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();

@@ -1,5 +1,7 @@
 package krasa.visualvm;
 
+import krasa.visualvm.integration.VisualVMHelper;
+
 public class PluginSettings {
 
 	private String visualVmExecutable;

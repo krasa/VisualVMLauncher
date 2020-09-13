@@ -22,11 +22,8 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package krasa.visualvm;
+package krasa.visualvm.integration;
 
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.execution.configurations.RunConfigurationModule;
-import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -37,7 +34,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import krasa.visualvm.runner.VisualVMRunnerSettings;
+import krasa.visualvm.ApplicationSettingsService;
+import krasa.visualvm.LogHelper;
+import krasa.visualvm.PluginSettings;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,8 +52,9 @@ public final class VisualVMHelper {
 		VisualVMHelper.openInVisualVM(appId, jdkHome, thisInstance, project, runConfigurationModule);
 	}
 
-	public static void startVisualVM(ExecutionEnvironment env, VisualVMRunnerSettings runnerSettings, Object thisInstance) {
-		startVisualVM(runnerSettings.getVisualVMId(), runnerSettings.getJdkHome(), env.getProject(), resolveModule(env), thisInstance);
+	public static void startVisualVM(ExecutionEnvironment env, Object thisInstance) {
+		VisualVMContext load = VisualVMContext.load();
+		startVisualVM(load.getAppId(), load.getJdkPath(), env.getProject(), load.getModule(), thisInstance);
 
 	}
 
@@ -63,7 +63,7 @@ public final class VisualVMHelper {
 	}
 
 	public static void startVisualVM(String jdkHome) {
-		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
+		PluginSettings state = ApplicationSettingsService.getInstance().getState();
 
 		String visualVmPath = state.getVisualVmExecutable();
 		if (!isValidPath(visualVmPath)) {
@@ -87,7 +87,7 @@ public final class VisualVMHelper {
 	}
 
 	public static void openInVisualVM(long id, String jdkHome, Object thisInstance, Project project, Module module) {
-		PluginSettings pluginSettings = ApplicationSettingsComponent.getInstance().getState();
+		PluginSettings pluginSettings = ApplicationSettingsService.getInstance().getState();
 
 		String visualVmPath = pluginSettings.getVisualVmExecutable();
 		String configuredJdkHome = pluginSettings.getJdkHome();
@@ -168,26 +168,6 @@ public final class VisualVMHelper {
 		return "\"" + s + "\"";
 	}
 
-	public static Module resolveModule(ExecutionEnvironment env) {
-		Module runConfigurationModule = null;
-		if (env != null) {
-			runConfigurationModule = resolveModule(env.getRunProfile());
-		}
-		return runConfigurationModule;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static Module resolveModule(RunProfile runProfile) {
-		Module runConfigurationModule = null;
-		if (runProfile instanceof ModuleBasedConfiguration) {
-			ModuleBasedConfiguration configuration = (ModuleBasedConfiguration) runProfile;
-			RunConfigurationModule configurationModule = configuration.getConfigurationModule();
-			if (configurationModule != null) {
-				runConfigurationModule = configurationModule.getModule();
-			}
-		}
-		return runConfigurationModule;
-	}
 
 	public static boolean isValidPath(String visualVmPath) {
 		return !StringUtils.isBlank(visualVmPath) && new File(visualVmPath).exists();

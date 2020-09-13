@@ -1,4 +1,4 @@
-package krasa.visualvm;
+package krasa.visualvm.integration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;

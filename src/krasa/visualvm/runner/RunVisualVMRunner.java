@@ -32,21 +32,18 @@
 package krasa.visualvm.runner;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.configurations.*;
+import com.intellij.execution.configurations.ModuleRunProfile;
+import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.impl.DefaultJavaProgramRunner;
 import com.intellij.execution.jar.JarApplicationConfiguration;
 import com.intellij.execution.remote.RemoteConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
-import krasa.visualvm.LogHelper;
 import krasa.visualvm.MyConfigurable;
-import krasa.visualvm.VisualVMContext;
-import krasa.visualvm.VisualVMJavaProgramPatcher;
 import krasa.visualvm.executor.RunVisualVMExecutor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	private static final Logger log = Logger.getInstance(DebugVisualVMRunner.class.getName());
@@ -62,14 +59,6 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 
 	@Override
 	public void execute(@NotNull final ExecutionEnvironment env) throws ExecutionException {
-		final VisualVMGenericRunnerSettings settings = ((VisualVMGenericRunnerSettings) env.getRunnerSettings());
-		if (settings != null) {
-			settings.generateId();
-			new VisualVMContext(env, settings).save();
-		}
-
-		LogHelper.print("#execute", this);
-
 		boolean b = MyConfigurable.openSettingsIfNotConfigured(env.getProject());
 		if (!b) {
 			return;
@@ -84,35 +73,5 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		RunnerUtils.runVisualVM(this, env, state);
 		return runContentDescriptor;
 	}
-
-	@Override
-	public void onProcessStarted(RunnerSettings settings, ExecutionResult executionResult) {
-		super.onProcessStarted(settings, executionResult);
-		LogHelper.print("#onProcessStarted", this);
-
-	}
-
-	@Override
-	public void patch(JavaParameters javaParameters, RunnerSettings settings, RunProfile runProfile, final boolean beforeExecution) {
-
-		addVisualVMIdToJavaParameter(javaParameters, settings);
-		super.patch(javaParameters, settings, runProfile, beforeExecution);
-	}
-
-
-	/*used for tomcat and normal applications*/
-	private void addVisualVMIdToJavaParameter(JavaParameters javaParameters, RunnerSettings settings) {
-		final VisualVMGenericRunnerSettings runnerSettings = ((VisualVMGenericRunnerSettings) settings);
-		LogHelper.print("#addVisualVMIdToJavaParameter -Dvisualvm.id=" + runnerSettings.getVisualVMId(), this);
-		javaParameters.getVMParametersList().add("-Dvisualvm.id=" + runnerSettings.getVisualVMId());
-		runnerSettings.setJdkHome(VisualVMJavaProgramPatcher.getJdkPath(javaParameters));
-	}
-
-	@Override
-	@Nullable
-	public RunnerSettings createConfigurationData(final ConfigurationInfoProvider settingsProvider) {
-		return new VisualVMGenericRunnerSettings();
-	}
-
 
 }

@@ -1,13 +1,18 @@
-package krasa.visualvm;
+package krasa.visualvm.integration;
 
 import com.intellij.execution.CantRunException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.JavaParameters;
+import com.intellij.execution.configurations.ModuleBasedConfiguration;
+import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.JavaProgramPatcher;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
+import krasa.visualvm.Hacks;
+import krasa.visualvm.LogHelper;
 import krasa.visualvm.action.StartVisualVMConsoleAction;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,25 +42,14 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 	private VisualVMContext patch(RunProfile configuration, JavaParameters javaParameters) {
 		String jdkPath = getJdkPath(javaParameters);
 
-		VisualVMContext load = VisualVMContext.load();
-		String param = null;
-		if (load != null) {
-			Long appId = load.getAppId();
-			param = "-Dvisualvm.id=" + appId;
-		}
-		if (param != null && javaParameters.getVMParametersList().getParametersString().contains(param)) {
-			return load;
-		} else {
-			final Long appId = VisualVMHelper.getNextID();
-
-			LogHelper.print("Patching: jdkPath=" + jdkPath + "; appId=" + appId, this);
-			javaParameters.getVMParametersList().prepend("-Dvisualvm.id=" + appId);
+		final Long appId = VisualVMHelper.getNextID();
+		LogHelper.print("Patching: jdkPath=" + jdkPath + "; appId=" + appId, this);
+		javaParameters.getVMParametersList().prepend("-Dvisualvm.id=" + appId);
 
 
-			VisualVMContext visualVMContext = new VisualVMContext(appId, jdkPath, VisualVMHelper.resolveModule(configuration));
-			visualVMContext.save();
-			return visualVMContext;
-		}
+		VisualVMContext visualVMContext = new VisualVMContext(appId, jdkPath, resolveModule(configuration));
+		visualVMContext.save();
+		return visualVMContext;
 	}
 
 	@Nullable
@@ -75,6 +69,19 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 			log.error(e);
 		}
 		return jdkPath;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static Module resolveModule(RunProfile runProfile) {
+		Module runConfigurationModule = null;
+		if (runProfile instanceof ModuleBasedConfiguration) {
+			ModuleBasedConfiguration configuration = (ModuleBasedConfiguration) runProfile;
+			RunConfigurationModule configurationModule = configuration.getConfigurationModule();
+			if (configurationModule != null) {
+				runConfigurationModule = configurationModule.getModule();
+			}
+		}
+		return runConfigurationModule;
 	}
 
 }

@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.16.201.000.0</version>
+	<version>1.16.201.000.1</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -52,12 +52,6 @@
 	<!--<idea-version since-build="134.1007" until-build="138.2210"/>-->
 	<idea-version since-build="201.000"/>
 
-	<application-components>
-		<component>
-			<implementation-class>krasa.visualvm.ApplicationSettingsComponent</implementation-class>
-		</component>
-	</application-components>
-
 	<project-components>
 		<!-- Add your project components here -->
 	</project-components>
@@ -85,10 +79,11 @@
 		<programRunner implementation="krasa.visualvm.runner.RunVisualVMRunner"/>
 		<programRunner implementation="krasa.visualvm.runner.DebugVisualVMRunner"/>
 		<executor implementation="krasa.visualvm.executor.DebugVisualVMExecutor"/>
-		<java.programPatcher implementation="krasa.visualvm.VisualVMJavaProgramPatcher"/>
-		<consoleActionsPostProcessor implementation="krasa.visualvm.VisualVMConsoleActionsPostProcessor"/>
+		<java.programPatcher implementation="krasa.visualvm.integration.VisualVMJavaProgramPatcher"/>
+		<consoleActionsPostProcessor implementation="krasa.visualvm.integration.VisualVMConsoleActionsPostProcessor"/>
 		<applicationConfigurable instance="krasa.visualvm.MyConfigurable" id="VisualVMLauncher"
 								 displayName="VisualVM Launcher"/>
+		<applicationService serviceImplementation="krasa.visualvm.ApplicationSettingsService"/>
 	</extensions>
 
 	<depends>com.intellij.modules.java</depends>

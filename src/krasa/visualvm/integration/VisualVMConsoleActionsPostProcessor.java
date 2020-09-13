@@ -1,16 +1,14 @@
-package krasa.visualvm;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import com.intellij.openapi.diagnostic.Logger;
-import krasa.visualvm.action.StartVisualVMConsoleAction;
-
-import org.jetbrains.annotations.NotNull;
+package krasa.visualvm.integration;
 
 import com.intellij.execution.actions.ConsoleActionsPostProcessor;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.diagnostic.Logger;
+import krasa.visualvm.action.StartVisualVMConsoleAction;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class VisualVMConsoleActionsPostProcessor extends ConsoleActionsPostProcessor {
 	private static final Logger log = Logger.getInstance(VisualVMConsoleActionsPostProcessor.class.getName());

@@ -2,7 +2,7 @@ package krasa.visualvm.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import krasa.visualvm.VisualVMHelper;
+import krasa.visualvm.integration.VisualVMHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

@@ -3,7 +3,12 @@ package krasa.visualvm.action;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import krasa.visualvm.*;
+import krasa.visualvm.ApplicationSettingsService;
+import krasa.visualvm.LogHelper;
+import krasa.visualvm.MyConfigurable;
+import krasa.visualvm.Resources;
+import krasa.visualvm.integration.VisualVMContext;
+import krasa.visualvm.integration.VisualVMHelper;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -76,7 +81,7 @@ public class StartVisualVMConsoleAction extends AnAction {
 	private static boolean isRecentlyCreated(StartVisualVMConsoleAction next) {
 		long l = System.currentTimeMillis() - next.getCreated();
 		LogHelper.print("#isRecentlyCreated " + l + " " + next, null);
-		return l < ApplicationSettingsComponent.getInstance().getState().getDurationToSetContextToButtonAsLong();
+		return l < ApplicationSettingsService.getInstance().getState().getDurationToSetContextToButtonAsLong();
 	}
 
 	@Override
