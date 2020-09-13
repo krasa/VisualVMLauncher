@@ -39,6 +39,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import krasa.visualvm.runner.VisualVMRunnerSettings;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,10 +62,6 @@ public final class VisualVMHelper {
 		return System.nanoTime();
 	}
 
-	public static String[] getJvmArgs(long id) {
-		return new String[]{"-Dvisualvm.id=" + id};
-	}
-
 	public static void startVisualVM(String jdkHome) {
 		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
 
@@ -80,7 +77,7 @@ public final class VisualVMHelper {
 					Runtime.getRuntime().exec(new String[]{visualVmPath});
 				} else {
 					Runtime.getRuntime().exec(
-						new String[]{visualVmPath, "--jdkhome", jdkHome});
+						new String[]{visualVmPath, "--jdkhome", wrap(jdkHome)});
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome, e);
@@ -107,17 +104,10 @@ public final class VisualVMHelper {
 			final Notification notification = new Notification("VisualVMLauncher", "",
 				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
 				NotificationType.ERROR);
-			ApplicationManager.getApplication().invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					Notifications.Bus.notify(notification);
-				}
-			});
+			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
 		} else {
 			run(id, jdkHome, thisInstance, project, visualVmPath, idString, pluginSettings.isSourceRoots(), module);
 		}
-
-
 	}
 
 	private static void run(long id, String jdkHome, Object thisInstance, Project project, String visualVmPath, String idString, boolean sourceRoots, Module module) {
@@ -127,7 +117,7 @@ public final class VisualVMHelper {
 			cmds.add(visualVmPath);
 			if (!StringUtils.isBlank(jdkHome)) {
 				cmds.add("--jdkhome");
-				cmds.add(jdkHome);
+				cmds.add(wrap(jdkHome));
 			}
 			cmds.add("--openid");
 			cmds.add(idString);
@@ -155,23 +145,27 @@ public final class VisualVMHelper {
 	}
 
 	public static void addSourcePluginParameters(Project project, List<String> cmds, Module runConfigurationModule) {
-
 		cmds.add("--source-roots");
-		cmds.add("\"" + SourceRoots.resolve(project, runConfigurationModule) + "\"");
+		cmds.add(wrap(SourceRoots.resolve(project, runConfigurationModule)));
 		// --source-viewer="c:\NetBeans\bin\netbeans {file}:{line}"
 		//https://www.jetbrains.com/help/idea/opening-files-from-command-line.html
 		cmds.add("--source-viewer");
 		String homePath = PathManager.getHomePath();
 		if (SystemInfo.isWindows) {
 			//idea.bat --line 42 C:\MyProject\scripts\numbers.js
-			cmds.add("\"" + homePath + "\\bin\\idea.bat --line {line} {file}" + "\"");
+			cmds.add(wrap(homePath + "\\bin\\idea.bat --line {line} {file}"));
 		} else if (SystemInfo.isMac) {
 			//idea --line <number> <path>
-			cmds.add("\"" + homePath + "/bin/idea --line {line} {file}" + "\"");
+			cmds.add(wrap(homePath + "/bin/idea --line {line} {file}"));
 		} else {
 			//idea.sh --line <number> <path>
-			cmds.add("\"" + homePath + "/bin/idea.sh --line {line} {file}" + "\"");
+			cmds.add(wrap(homePath + "/bin/idea.sh --line {line} {file}"));
 		}
+	}
+
+	@NotNull
+	private static String wrap(String s) {
+		return "\"" + s + "\"";
 	}
 
 	public static Module resolveModule(ExecutionEnvironment env) {

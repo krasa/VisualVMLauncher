@@ -38,20 +38,18 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 		String jdkPath = getJdkPath(javaParameters);
 
 		VisualVMContext load = VisualVMContext.load();
-		String id = null;
+		String param = null;
 		if (load != null) {
 			Long appId = load.getAppId();
-			id = "-Dvisualvm.id=" + appId;
+			param = "-Dvisualvm.id=" + appId;
 		}
-		if (id != null && javaParameters.getVMParametersList().getParametersString().contains(id)) {
+		if (param != null && javaParameters.getVMParametersList().getParametersString().contains(param)) {
 			return load;
 		} else {
 			final Long appId = VisualVMHelper.getNextID();
 
 			LogHelper.print("Patching: jdkPath=" + jdkPath + "; appId=" + appId, this);
-			for (String arg : VisualVMHelper.getJvmArgs(appId)) {
-				javaParameters.getVMParametersList().prepend(arg);
-			}
+			javaParameters.getVMParametersList().prepend("-Dvisualvm.id=" + appId);
 
 
 			VisualVMContext visualVMContext = new VisualVMContext(appId, jdkPath, VisualVMHelper.resolveModule(configuration));
