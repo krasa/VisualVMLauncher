@@ -74,7 +74,7 @@ public class StartVisualVMMainToolbarAction extends DumbAwareAction {
 	private boolean checkVisualVmExecutable() {
 		PluginSettings state = ApplicationSettingsComponent.getInstance().getState();
 		String visualVmPath = state.getVisualVmExecutable();
-		if (org.apache.commons.lang3.StringUtils.isBlank(visualVmPath)) {
+		if (org.apache.commons.lang.StringUtils.isBlank(visualVmPath)) {
 			final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
 			descriptor.setHideIgnored(true);
 

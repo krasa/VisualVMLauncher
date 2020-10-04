@@ -19,14 +19,15 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 	public void patchJavaParameters(Executor executor, RunProfile configuration, JavaParameters javaParameters) {
 		LogHelper.print("#patchJavaParameters start", this);
 
-		if (Hacks.BUNDLED_SERVERS_RUN_PROFILE.equals(configuration.getClass().getName())) {
-			LogHelper.print("patchJavaParameters com.intellij.javaee.run.configuration.CommonStrategy", this);
+		String name = configuration.getClass().getName();
+		if (name.startsWith(Hacks.BUNDLED_SERVERS_RUN_PROFILE)) {
+			LogHelper.print("patchJavaParameters " + name, this);
 
 			if (System.currentTimeMillis() - lastExecution > 1000) {
-				LogHelper.print("patchJavaParameters com.intellij.javaee.run.configuration.CommonStrategy patching", this);
+				LogHelper.print("patchJavaParameters " + name + " patching", this);
 
 				VisualVMContext visualVMContext = patch(configuration, javaParameters);
-				StartVisualVMConsoleAction.setVisualVMContextToRecentlyCreated(visualVMContext);
+				new StartVisualVMConsoleAction().setVisualVMContextToRecentlyCreated(visualVMContext);
 				lastExecution = System.currentTimeMillis();
 			}
 		} else {
