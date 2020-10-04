@@ -27,7 +27,7 @@ public class VisualVMJavaProgramPatcher extends JavaProgramPatcher {
 				LogHelper.print("patchJavaParameters " + name + " patching", this);
 
 				VisualVMContext visualVMContext = patch(configuration, javaParameters);
-				new StartVisualVMConsoleAction().setVisualVMContextToRecentlyCreated(visualVMContext);
+				StartVisualVMConsoleAction.setVisualVMContextToRecentlyCreated(visualVMContext);
 				lastExecution = System.currentTimeMillis();
 			}
 		} else {
