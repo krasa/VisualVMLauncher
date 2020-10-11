@@ -5,8 +5,8 @@ import krasa.visualvm.integration.VisualVMHelper;
 public class PluginSettings {
 
 	private String visualVmExecutable;
-	private String durationToSetContextToButton = "5000";
-	private String delayForVisualVMStart = "5000";
+	private String durationToSetContextToButton = "10000";
+	private String delayForVisualVMStart = "10000";
 	private String jdkHome;
 	private boolean useTabIndex;
 	private String tabIndex = "2";

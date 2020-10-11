@@ -16,6 +16,7 @@
 	<change-notes><![CDATA[
         <br>1.17
         <br>- support for <a href="https://visualvm.github.io/sourcessupport.html">GoToSource plugin v1.1</a>
+        <br>- bundled servers support fix
         <br>1.16
         <br>- fixes for <a href="https://visualvm.github.io/sourcessupport.html">GoToSource plugin</a>
         <br>1.15

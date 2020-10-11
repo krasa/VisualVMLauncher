@@ -39,6 +39,8 @@ public class StartVisualVMConsoleAction extends AnAction {
 		if (!VisualVMContext.isValid(visualVMContext)) {
 //			presentation.setVisible(false);
 			presentation.setEnabled(false);
+		} else {
+			presentation.setDescription("Open VisualVM with id=" + visualVMContext.getAppId());
 		}
 	}
 
