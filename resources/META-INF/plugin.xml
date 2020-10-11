@@ -25,38 +25,15 @@
         <br>- main toolbar action
         <br>1.13
         <br>- high resolution icons - thanks to <a href="https://github.com/tan9">Pei-Tang Huang</a>
-        <br>1.12
-        <br>- settings for tab on which VisualVM should open
-        <br>- Jar Application support
-        <br>1.11
-        <br>- jdkhome settings
-        <br>1.10
-        <br>- IntelliJ 2018.2 compatibility
-        <br>1.9
-        <br>- IntelliJ 2018 compatibility
-        <br>1.8
-        <br>- IntelliJ 2016 compatibility
-        <br>1.7
-        <br>- IJ 14 API update
-        <br>1.6
-        <br>- tool window icons fixed
-        <br>1.5.134
-        <br>- API change
-        <br>- NPE fix
-        <br>1.4
-        <br>- IJ 13 API change
       	<br>...
         <br>0.1 (2012-11-05)
         <br>- Initial release
       ]]>
 	</change-notes>
 
-	<!--<idea-version since-build="132.637" until-build="134.000"/>-->
-	<!--<idea-version since-build="134.1007" until-build="138.2210"/>-->
 	<idea-version since-build="201.000"/>
 
 	<project-components>
-		<!-- Add your project components here -->
 	</project-components>
 
 	<actions>
@@ -68,13 +45,6 @@
 				description="Start VisualVM with selectable JDK">
 			<add-to-group group-id="MainToolBar" anchor="last"/>
 		</action>
-		<!-- Add your actions here -->
-		<!--		<action id="krasa.visualvm.action.DummyTestAction" class="krasa.visualvm.action.DummyTestAction"-->
-		<!--				icon="/krasa/visualvm/svg/console16.svg"-->
-		<!--				text="DummyTestAction">-->
-		<!--			<add-to-group group-id="MainToolBar" anchor="last"/>-->
-
-		<!--		</action>-->
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">

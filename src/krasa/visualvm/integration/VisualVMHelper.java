@@ -170,6 +170,7 @@ public final class VisualVMHelper {
 		cmds.add(tempFile.getAbsolutePath());
 	}
 
+	@Deprecated
 	public static void addSourcePluginParameters(Project project, List<String> cmds, Module runConfigurationModule) {
 		cmds.add("--source-roots");
 		cmds.add(SourceRoots.resolve(project, runConfigurationModule));
