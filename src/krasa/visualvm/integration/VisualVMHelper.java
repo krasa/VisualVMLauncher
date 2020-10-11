@@ -33,6 +33,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
 import krasa.visualvm.ApplicationSettingsService;
 import krasa.visualvm.LogHelper;
 import krasa.visualvm.PluginSettings;
@@ -40,9 +41,12 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
@@ -67,10 +71,9 @@ public final class VisualVMHelper {
 		} else {
 			try {
 				if (StringUtils.isBlank(jdkHome_doNotOverride)) {
-					Runtime.getRuntime().exec(new String[]{visualVmPath});
+					new ProcessBuilder(visualVmPath).start();
 				} else {
-					Runtime.getRuntime().exec(
-						new String[]{visualVmPath, "--jdkhome", wrap(jdkHome_doNotOverride)});
+					new ProcessBuilder(visualVmPath, "--jdkhome", jdkHome_doNotOverride).start();
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome_doNotOverride, e);
@@ -85,6 +88,7 @@ public final class VisualVMHelper {
 		String visualVmPath = pluginSettings.getVisualVmExecutable();
 		String customJdkHome = pluginSettings.getJdkHome();
 		boolean useModuleJdk = pluginSettings.isUseModuleJdk();
+		boolean sourceConfig = pluginSettings.isSourceConfig();
 
 		if (useModuleJdk) {
 			if (StringUtils.isBlank(jdkHome)) {
@@ -105,37 +109,44 @@ public final class VisualVMHelper {
 				NotificationType.ERROR);
 			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
 		} else {
-			run(id, jdkHome, thisInstance, project, visualVmPath, idString, pluginSettings.isSourceRoots(), module);
+			run(jdkHome, project, visualVmPath, idString, sourceConfig, module, thisInstance);
 		}
 	}
 
-	private static void run(long id, String jdkHome, Object thisInstance, Project project, String visualVmPath, String idString, boolean sourceRoots, Module module) {
+	private static void run(String jdkHome, Project project, String visualVmPath, String idString, boolean sourceConfig, Module module, Object thisInstance) {
 		LogHelper.print("starting VisualVM with id=" + idString, thisInstance);
 		List<String> cmds = new ArrayList<>();
 		try {
 			cmds.add(visualVmPath);
 			if (!StringUtils.isBlank(jdkHome)) {
 				cmds.add("--jdkhome");
-				cmds.add(wrap(jdkHome));
+				cmds.add(jdkHome);
 			}
 			cmds.add("--openid");
 			cmds.add(idString);
-			if (sourceRoots) {
+			if (sourceConfig) {
 				try {
-					addSourcePluginParameters(project, cmds, module);
+					addSourceConfig(project, cmds, module);
 				} catch (Throwable e) {
 					log.error(e);
 				}
 			}
+//			if (sourceRoots) {
+//				try {
+//					addSourcePluginParameters(project, cmds, module);
+//				} catch (Throwable e) {
+//					log.error(e);
+//				}
+//			}
 
 			log.info("Starting VisualVM with parameters:" + cmds);
-			Runtime.getRuntime().exec(cmds.toArray(new String[0]));
+			new ProcessBuilder(cmds).start();
 		} catch (IOException e) {
-			if (sourceRoots) {
+			if (sourceConfig) {
 				boolean contains = e.getMessage().contains("The filename or extension is too long");
 				if (contains) {
 					log.error("Please disable 'Integrate with VisualVM-GoToSource plugin' option at 'File | Settings | Other Settings | VisualVM Launcher'.\nThe command was too long: " + cmds.toString().length(), e);
-					run(id, jdkHome, thisInstance, project, visualVmPath, idString, false, module);
+					run(jdkHome, project, visualVmPath, idString, false, module, thisInstance);
 					return;
 				}
 			}
@@ -143,28 +154,46 @@ public final class VisualVMHelper {
 		}
 	}
 
+	private static void addSourceConfig(Project project, List<String> cmds, Module runConfigurationModule) throws IOException {
+		Properties props = new Properties();
+		props.setProperty("source-roots", SourceRoots.resolve(project, runConfigurationModule));
+		props.setProperty("source-viewer", getIdeaExe());
+
+		File tempFile = FileUtil.createTempFile("visualVmConfig", ".properties");
+		try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8")) {
+			props.store(osw, null);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		cmds.add("--source-config");
+		cmds.add(tempFile.getAbsolutePath());
+	}
+
 	public static void addSourcePluginParameters(Project project, List<String> cmds, Module runConfigurationModule) {
 		cmds.add("--source-roots");
-		cmds.add(wrap(SourceRoots.resolve(project, runConfigurationModule)));
+		cmds.add(SourceRoots.resolve(project, runConfigurationModule));
 		// --source-viewer="c:\NetBeans\bin\netbeans {file}:{line}"
 		//https://www.jetbrains.com/help/idea/opening-files-from-command-line.html
 		cmds.add("--source-viewer");
-		String homePath = PathManager.getHomePath();
-		if (SystemInfo.isWindows) {
-			//idea.bat --line 42 C:\MyProject\scripts\numbers.js
-			cmds.add(wrap(homePath + "\\bin\\idea.bat --line {line} {file}"));
-		} else if (SystemInfo.isMac) {
-			//idea --line <number> <path>
-			cmds.add(wrap(homePath + "/bin/idea --line {line} {file}"));
-		} else {
-			//idea.sh --line <number> <path>
-			cmds.add(wrap(homePath + "/bin/idea.sh --line {line} {file}"));
-		}
+		cmds.add(getIdeaExe());
 	}
 
 	@NotNull
-	private static String wrap(String s) {
-		return "\"" + s + "\"";
+	private static String getIdeaExe() {
+		String homePath = PathManager.getHomePath();
+		String s;
+		if (SystemInfo.isWindows) {
+			//idea.bat --line 42 C:\MyProject\scripts\numbers.js
+			s = "\"" + homePath + "\\bin\\idea.bat\" --line {line} {file}";
+		} else if (SystemInfo.isMac) {
+			//idea --line <number> <path>
+			s = "\"" + homePath + "/bin/idea\" --line {line} {file}";
+		} else {
+			//idea.sh --line <number> <path>
+			s = "\"" + homePath + "/bin/idea.sh\" --line {line} {file}";
+		}
+		return s;
 	}
 
 

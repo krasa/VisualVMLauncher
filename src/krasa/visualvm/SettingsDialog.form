@@ -186,14 +186,15 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="bdb16" class="javax.swing.JCheckBox" binding="sourceRoots">
+          <component id="bdb16" class="javax.swing.JCheckBox" binding="sourceConfig">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="259" height="18"/>
               </grid>
             </constraints>
             <properties>
-              <text value="Integrate with VisualVM-GoToSource plugin (for 2.0.4+)"/>
+              <text value="Integrate with VisualVM-GoToSource plugin 1.1+ (for 2.0.4+)"/>
+              <toolTipText value="Passes a generated config file as --source-config"/>
             </properties>
           </component>
           <component id="95a3" class="com.intellij.ui.components.labels.LinkLabel" binding="linkLabel">

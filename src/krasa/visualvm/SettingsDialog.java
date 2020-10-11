@@ -36,7 +36,7 @@ public class SettingsDialog {
 	private JButton browseJdkHome;
 	private JCheckBox openOnTabForCheckBox;
 	private JTextField tabIndex;
-	private JCheckBox sourceRoots;
+	private JCheckBox sourceConfig;
 	private LinkLabel linkLabel;
 	private JPanel donatePanel;
 	private JCheckBox useModuleJdk;
@@ -158,7 +158,7 @@ public class SettingsDialog {
 		jdkHome.setText(data.getJdkHome());
 		openOnTabForCheckBox.setSelected(data.isUseTabIndex());
 		tabIndex.setText(data.getTabIndex());
-		sourceRoots.setSelected(data.isSourceRoots());
+		sourceConfig.setSelected(data.isSourceConfig());
 		useModuleJdk.setSelected(data.isUseModuleJdk());
 	}
 
@@ -169,7 +169,7 @@ public class SettingsDialog {
 		data.setJdkHome(jdkHome.getText());
 		data.setUseTabIndex(openOnTabForCheckBox.isSelected());
 		data.setTabIndex(tabIndex.getText());
-		data.setSourceRoots(sourceRoots.isSelected());
+		data.setSourceConfig(sourceConfig.isSelected());
 		data.setUseModuleJdk(useModuleJdk.isSelected());
 	}
 
@@ -185,7 +185,7 @@ public class SettingsDialog {
 		if (openOnTabForCheckBox.isSelected() != data.isUseTabIndex()) return true;
 		if (tabIndex.getText() != null ? !tabIndex.getText().equals(data.getTabIndex()) : data.getTabIndex() != null)
 			return true;
-		if (sourceRoots.isSelected() != data.isSourceRoots()) return true;
+		if (sourceConfig.isSelected() != data.isSourceConfig()) return true;
 		if (useModuleJdk.isSelected() != data.isUseModuleJdk()) return true;
 		return false;
 	}

@@ -10,7 +10,7 @@ public class PluginSettings {
 	private String jdkHome;
 	private boolean useTabIndex;
 	private String tabIndex = "2";
-	private boolean sourceRoots = false;
+	private boolean sourceConfig = false;
 	private boolean useModuleJdk = true;
 
 
@@ -76,12 +76,12 @@ public class PluginSettings {
 		this.tabIndex = tabIndex;
 	}
 
-	public boolean isSourceRoots() {
-		return sourceRoots;
+	public boolean isSourceConfig() {
+		return sourceConfig;
 	}
 
-	public void setSourceRoots(final boolean sourceRoots) {
-		this.sourceRoots = sourceRoots;
+	public void setSourceConfig(final boolean sourceConfig) {
+		this.sourceConfig = sourceConfig;
 	}
 
 	public boolean isUseModuleJdk() {
