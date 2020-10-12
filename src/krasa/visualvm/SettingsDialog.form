@@ -214,7 +214,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Use configured JDK for the current module/project as --jdkhome parameter for VisualVM"/>
+          <text value="Use the configured JDK for the current module/project as --jdkhome parameter for VisualVM"/>
         </properties>
       </component>
       <component id="3f1ef" class="javax.swing.JLabel">

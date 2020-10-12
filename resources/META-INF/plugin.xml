@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.17.201.000.0</version>
+	<version>1.17.201.000.1</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -17,6 +17,7 @@
         <br>1.17
         <br>- support for <a href="https://visualvm.github.io/sourcessupport.html">GoToSource plugin v1.1</a>
         <br>- bundled servers support fix
+        <br>- process output log file in the IDE log folder
         <br>1.16
         <br>- fixes for <a href="https://visualvm.github.io/sourcessupport.html">GoToSource plugin</a>
         <br>1.15

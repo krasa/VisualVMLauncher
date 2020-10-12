@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -71,9 +72,9 @@ public final class VisualVMHelper {
 		} else {
 			try {
 				if (StringUtils.isBlank(jdkHome_doNotOverride)) {
-					new ProcessBuilder(visualVmPath).start();
+					startVisualVMProcess(visualVmPath);
 				} else {
-					new ProcessBuilder(visualVmPath, "--jdkhome", jdkHome_doNotOverride).start();
+					startVisualVMProcess(visualVmPath, "--jdkhome", jdkHome_doNotOverride);
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome_doNotOverride, e);
@@ -139,8 +140,7 @@ public final class VisualVMHelper {
 //				}
 //			}
 
-			log.info("Starting VisualVM with parameters:" + cmds);
-			new ProcessBuilder(cmds).start();
+			startVisualVMProcess(cmds.toArray(new String[0]));
 		} catch (IOException e) {
 			if (sourceConfig) {
 				boolean contains = e.getMessage().contains("The filename or extension is too long");
@@ -152,6 +152,18 @@ public final class VisualVMHelper {
 			}
 			throw new RuntimeException(cmds.toString(), e);
 		}
+	}
+
+	private static void startVisualVMProcess(String... cmds) throws IOException {
+		log.info("Starting VisualVM with parameters:" + Arrays.toString(cmds));
+		File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
+		file.createNewFile();
+		ProcessBuilder processBuilder = new ProcessBuilder(cmds);
+		if (file.exists()) {
+			processBuilder.redirectErrorStream(true);
+			processBuilder.redirectOutput(file);
+		}
+		processBuilder.start();
 	}
 
 	private static void addSourceConfig(Project project, List<String> cmds, Module runConfigurationModule) throws IOException {
