@@ -32,6 +32,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import krasa.visualvm.ApplicationSettingsService;
@@ -40,6 +41,7 @@ import krasa.visualvm.PluginSettings;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,7 +62,7 @@ public final class VisualVMHelper {
 		return System.nanoTime();
 	}
 
-	public static void startVisualVM(String jdkHome_doNotOverride) {
+	public static void startVisualVM(Project project, String jdkHome_doNotOverride) {
 		PluginSettings state = ApplicationSettingsService.getInstance().getState();
 
 		String visualVmPath = state.getVisualVmExecutable();
@@ -72,9 +74,9 @@ public final class VisualVMHelper {
 		} else {
 			try {
 				if (StringUtils.isBlank(jdkHome_doNotOverride)) {
-					startVisualVMProcess(visualVmPath);
+					startVisualVMProcess(project, visualVmPath);
 				} else {
-					startVisualVMProcess(visualVmPath, "--jdkhome", jdkHome_doNotOverride);
+					startVisualVMProcess(project, visualVmPath, "--jdkhome", jdkHome_doNotOverride);
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome_doNotOverride, e);
@@ -140,7 +142,7 @@ public final class VisualVMHelper {
 //				}
 //			}
 
-			startVisualVMProcess(cmds.toArray(new String[0]));
+			startVisualVMProcess(project, cmds.toArray(new String[0]));
 		} catch (IOException e) {
 			if (sourceConfig) {
 				boolean contains = e.getMessage().contains("The filename or extension is too long");
@@ -154,16 +156,17 @@ public final class VisualVMHelper {
 		}
 	}
 
-	private static void startVisualVMProcess(String... cmds) throws IOException {
+	private static void startVisualVMProcess(Project project, String... cmds) throws IOException {
 		log.info("Starting VisualVM with parameters:" + Arrays.toString(cmds));
-		File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
-		file.createNewFile();
+//		File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
+//		file.createNewFile();
 		ProcessBuilder processBuilder = new ProcessBuilder(cmds);
-		if (file.exists()) {
-			processBuilder.redirectErrorStream(true);
-			processBuilder.redirectOutput(file);
-		}
-		processBuilder.start();
+//		if (file.exists()) {
+//			processBuilder.redirectErrorStream(true);
+//			processBuilder.redirectOutput(file);
+//		}
+		Process process = processBuilder.start();
+		process.toHandle().onExit().whenCompleteAsync((processHandle, throwable) -> accept(project, process, processHandle, throwable));
 	}
 
 	private static void addSourceConfig(Project project, List<String> cmds, Module runConfigurationModule) throws IOException {
@@ -214,4 +217,22 @@ public final class VisualVMHelper {
 		return !StringUtils.isBlank(visualVmPath) && new File(visualVmPath).exists();
 	}
 
+	private static void accept(Project project, Process process, ProcessHandle processHandle, Throwable throwable) {
+		try {
+			if (!processHandle.isAlive()) {
+				if (process.exitValue() != 0) {
+					String err = new String(process.getErrorStream().readAllBytes(), "UTF-8");
+					if (StringUtils.isNotBlank(err)) {
+						String message = "VisualVM exited with code: " + process.exitValue() + ".\nError: " + err;
+						SwingUtilities.invokeLater(() ->
+							Messages.showErrorDialog(project, message, "VisualVM Launcher"));
+						log.warn(message);
+					}
+
+				}
+			}
+		} catch (Throwable e) {
+			log.warn(e);
+		}
+	}
 }

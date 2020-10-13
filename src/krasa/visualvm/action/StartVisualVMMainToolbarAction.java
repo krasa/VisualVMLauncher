@@ -102,7 +102,7 @@ public class StartVisualVMMainToolbarAction extends DumbAwareAction {
 
 		@Override
 		public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-			VisualVMHelper.startVisualVM(homePath);
+			VisualVMHelper.startVisualVM(anActionEvent.getProject(), homePath);
 		}
 	}
 }
