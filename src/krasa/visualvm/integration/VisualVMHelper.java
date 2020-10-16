@@ -180,7 +180,11 @@ public final class VisualVMHelper {
 
 		File ideExecutable = getIdeExecutable();
 		if (ideExecutable != null) {
-			props.setProperty("source-viewer", ideExecutable.getAbsolutePath());
+			if (ideExecutable.exists()) {
+				props.setProperty("source-viewer", ideExecutable.getAbsolutePath());
+			} else {
+				log.warn("Bin file not exists: " + ideExecutable.getAbsolutePath());
+			}
 		}
 
 		File tempFile = FileUtil.createTempFile("visualVmConfig", ".properties");
@@ -196,14 +200,15 @@ public final class VisualVMHelper {
 
 
 	protected static File getIdeExecutable() {
+		String scriptName = ApplicationNamesInfo.getInstance().getScriptName();
 		if (SystemInfo.isWindows) {
 			String bits = SystemInfo.is64Bit ? "64" : "";
-			return new File(PathManager.getBinPath(), ApplicationNamesInfo.getInstance().getScriptName() + bits + ".exe");
+			return new File(PathManager.getBinPath(), scriptName + bits + ".exe");
 		} else if (SystemInfo.isMac) {
 			File appDir = new File(PathManager.getHomePath(), "MacOS");
-			return new File(appDir, ApplicationNamesInfo.getInstance().getScriptName());
+			return new File(appDir, scriptName);
 		} else if (SystemInfo.isUnix) {
-			return new File(PathManager.getBinPath(), ApplicationNamesInfo.getInstance().getScriptName() + ".sh");
+			return new File(PathManager.getBinPath(), scriptName + ".sh");
 		} else {
 			log.error("invalid OS: " + SystemInfo.getOsNameAndVersion());
 			return null;
