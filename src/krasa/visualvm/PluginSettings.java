@@ -13,6 +13,7 @@ public class PluginSettings {
 	private boolean sourceConfig = false;
 	private boolean useModuleJdk = true;
 	private boolean disableProcessDialog;
+	private String laf = "";
 
 
 	public String getVisualVmExecutable() {
@@ -99,5 +100,13 @@ public class PluginSettings {
 
 	public void setDisableProcessDialog(final boolean disableProcessDialog) {
 		this.disableProcessDialog = disableProcessDialog;
+	}
+
+	public String getLaf() {
+		return laf;
+	}
+
+	public void setLaf(final String laf) {
+		this.laf = laf;
 	}
 }

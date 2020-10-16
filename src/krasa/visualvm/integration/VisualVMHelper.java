@@ -74,9 +74,9 @@ public final class VisualVMHelper {
 		} else {
 			try {
 				if (StringUtils.isBlank(jdkHome_doNotOverride)) {
-					startVisualVMProcess(project, visualVmPath);
+					new VisualVMProcess(project, visualVmPath).run();
 				} else {
-					startVisualVMProcess(project, visualVmPath, "--jdkhome", jdkHome_doNotOverride);
+					new VisualVMProcess(project, visualVmPath, "--jdkhome", jdkHome_doNotOverride).run();
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("visualVmPath=" + visualVmPath + "; jdkHome=" + jdkHome_doNotOverride, e);
@@ -134,15 +134,7 @@ public final class VisualVMHelper {
 					log.error(e);
 				}
 			}
-//			if (sourceRoots) {
-//				try {
-//					addSourcePluginParameters(project, cmds, module);
-//				} catch (Throwable e) {
-//					log.error(e);
-//				}
-//			}
-
-			startVisualVMProcess(project, cmds.toArray(new String[0]));
+			new VisualVMProcess(project, cmds.toArray(new String[0])).run();
 		} catch (IOException e) {
 			if (sourceConfig) {
 				boolean contains = e.getMessage().contains("The filename or extension is too long");
@@ -153,24 +145,6 @@ public final class VisualVMHelper {
 				}
 			}
 			throw new RuntimeException(cmds.toString(), e);
-		}
-	}
-
-	private static void startVisualVMProcess(Project project, String... cmds) throws IOException {
-		boolean disableProcessDialog = ApplicationSettingsService.getInstance().getState().isDisableProcessDialog();
-		log.info("Starting VisualVM with parameters:" + Arrays.toString(cmds));
-		ProcessBuilder processBuilder = new ProcessBuilder(cmds);
-		if (disableProcessDialog) {
-			File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
-			file.createNewFile();
-			if (file.exists()) {
-				processBuilder.redirectErrorStream(true);
-				processBuilder.redirectOutput(file);
-			}
-		}
-		Process process = processBuilder.start();
-		if (!disableProcessDialog) {
-			process.toHandle().onExit().whenCompleteAsync((processHandle, throwable) -> accept(project, process, processHandle, throwable));
 		}
 	}
 
@@ -219,22 +193,64 @@ public final class VisualVMHelper {
 		return !StringUtils.isBlank(visualVmPath) && new File(visualVmPath).exists();
 	}
 
-	private static void accept(Project project, Process process, ProcessHandle processHandle, Throwable throwable) {
-		try {
-			if (!processHandle.isAlive()) {
-				if (process.exitValue() != 0) {
-					String err = new String(process.getErrorStream().readAllBytes(), "UTF-8");
-					if (StringUtils.isNotBlank(err)) {
-						String message = "VisualVM exited with code: " + process.exitValue() + ".\nError: " + err;
-						SwingUtilities.invokeLater(() ->
-							Messages.showErrorDialog(project, message, "VisualVM Launcher"));
-						log.warn(message);
-					}
 
+	static class VisualVMProcess {
+
+		private final Project project;
+		private final String[] cmds;
+
+		public VisualVMProcess(Project project, String... cmds) {
+			this.project = project;
+			this.cmds = cmds;
+		}
+
+		public void run() throws IOException {
+			PluginSettings settings = ApplicationSettingsService.getInstance().getState();
+			boolean disableProcessDialog = settings.isDisableProcessDialog();
+
+			List<String> cmd = new ArrayList<>(Arrays.asList(cmds));
+			if (StringUtils.isNotBlank(settings.getLaf())) {
+				cmd.add("--laf");
+				cmd.add(settings.getLaf());
+			}
+
+			log.info("Starting VisualVM with parameters:" + cmd);
+
+			ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+			if (disableProcessDialog) {
+				File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
+				file.createNewFile();
+				if (file.exists()) {
+					processBuilder.redirectErrorStream(true);
+					processBuilder.redirectOutput(file);
 				}
 			}
-		} catch (Throwable e) {
-			log.warn(e);
+			Process process = processBuilder.start();
+			if (!disableProcessDialog) {
+				process.toHandle().onExit().whenCompleteAsync((processHandle, throwable) -> accept(project, process, processHandle, throwable));
+			}
 		}
+
+		private static void accept(Project project, Process process, ProcessHandle processHandle, Throwable throwable) {
+			try {
+				if (!processHandle.isAlive()) {
+					if (process.exitValue() != 0) {
+						String err = new String(process.getErrorStream().readAllBytes(), "UTF-8");
+						if (StringUtils.isNotBlank(err)) {
+							String message = "VisualVM exited with code: " + process.exitValue() + ".\nError: " + err;
+							SwingUtilities.invokeLater(() ->
+								Messages.showErrorDialog(project, message, "VisualVM Launcher"));
+							log.warn(message);
+						}
+
+					}
+				}
+			} catch (Throwable e) {
+				log.warn(e);
+			}
+		}
+
 	}
+
+
 }
