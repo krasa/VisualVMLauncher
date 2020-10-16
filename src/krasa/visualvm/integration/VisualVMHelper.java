@@ -207,7 +207,7 @@ public final class VisualVMHelper {
 
 		public void run() throws IOException {
 			PluginSettings settings = ApplicationSettingsService.getInstance().getState();
-			boolean disableProcessDialog = settings.isDisableProcessDialog();
+			boolean disableProcessDialog = settings.isDisableProcessErrorDialog();
 
 			List<String> cmd = new ArrayList<>(Arrays.asList(cmds));
 			if (StringUtils.isNotBlank(settings.getLaf())) {
