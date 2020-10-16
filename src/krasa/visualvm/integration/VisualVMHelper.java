@@ -28,6 +28,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -39,7 +40,6 @@ import krasa.visualvm.ApplicationSettingsService;
 import krasa.visualvm.LogHelper;
 import krasa.visualvm.PluginSettings;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.File;
@@ -157,22 +157,31 @@ public final class VisualVMHelper {
 	}
 
 	private static void startVisualVMProcess(Project project, String... cmds) throws IOException {
+		boolean disableProcessDialog = ApplicationSettingsService.getInstance().getState().isDisableProcessDialog();
 		log.info("Starting VisualVM with parameters:" + Arrays.toString(cmds));
-//		File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
-//		file.createNewFile();
 		ProcessBuilder processBuilder = new ProcessBuilder(cmds);
-//		if (file.exists()) {
-//			processBuilder.redirectErrorStream(true);
-//			processBuilder.redirectOutput(file);
-//		}
+		if (disableProcessDialog) {
+			File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
+			file.createNewFile();
+			if (file.exists()) {
+				processBuilder.redirectErrorStream(true);
+				processBuilder.redirectOutput(file);
+			}
+		}
 		Process process = processBuilder.start();
-		process.toHandle().onExit().whenCompleteAsync((processHandle, throwable) -> accept(project, process, processHandle, throwable));
+		if (!disableProcessDialog) {
+			process.toHandle().onExit().whenCompleteAsync((processHandle, throwable) -> accept(project, process, processHandle, throwable));
+		}
 	}
 
 	private static void addSourceConfig(Project project, List<String> cmds, Module runConfigurationModule) throws IOException {
 		Properties props = new Properties();
 		props.setProperty("source-roots", SourceRoots.resolve(project, runConfigurationModule));
-		props.setProperty("source-viewer", getIdeaExe());
+
+		File ideExecutable = getIdeExecutable();
+		if (ideExecutable != null) {
+			props.setProperty("source-viewer", ideExecutable.getAbsolutePath());
+		}
 
 		File tempFile = FileUtil.createTempFile("visualVmConfig", ".properties");
 		try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8")) {
@@ -185,33 +194,21 @@ public final class VisualVMHelper {
 		cmds.add(tempFile.getAbsolutePath());
 	}
 
-	@Deprecated
-	public static void addSourcePluginParameters(Project project, List<String> cmds, Module runConfigurationModule) {
-		cmds.add("--source-roots");
-		cmds.add(SourceRoots.resolve(project, runConfigurationModule));
-		// --source-viewer="c:\NetBeans\bin\netbeans {file}:{line}"
-		//https://www.jetbrains.com/help/idea/opening-files-from-command-line.html
-		cmds.add("--source-viewer");
-		cmds.add(getIdeaExe());
-	}
 
-	@NotNull
-	private static String getIdeaExe() {
-		String homePath = PathManager.getHomePath();
-		String s;
+	protected static File getIdeExecutable() {
 		if (SystemInfo.isWindows) {
-			//idea.bat --line 42 C:\MyProject\scripts\numbers.js
-			s = "\"" + homePath + "\\bin\\idea.bat\" --line {line} {file}";
+			String bits = SystemInfo.is64Bit ? "64" : "";
+			return new File(PathManager.getBinPath(), ApplicationNamesInfo.getInstance().getScriptName() + bits + ".exe");
 		} else if (SystemInfo.isMac) {
-			//idea --line <number> <path>
-			s = "\"" + homePath + "/bin/idea\" --line {line} {file}";
+			File appDir = new File(PathManager.getHomePath(), "MacOS");
+			return new File(appDir, ApplicationNamesInfo.getInstance().getScriptName());
+		} else if (SystemInfo.isUnix) {
+			return new File(PathManager.getBinPath(), ApplicationNamesInfo.getInstance().getScriptName() + ".sh");
 		} else {
-			//idea.sh --line <number> <path>
-			s = "\"" + homePath + "/bin/idea.sh\" --line {line} {file}";
+			log.error("invalid OS: " + SystemInfo.getOsNameAndVersion());
+			return null;
 		}
-		return s;
 	}
-
 
 	public static boolean isValidPath(String visualVmPath) {
 		return !StringUtils.isBlank(visualVmPath) && new File(visualVmPath).exists();

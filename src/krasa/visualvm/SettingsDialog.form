@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="krasa.visualvm.SettingsDialog">
-  <grid id="27dc6" binding="rootComponent" layout-manager="GridLayoutManager" row-count="18" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="rootComponent" layout-manager="GridLayoutManager" row-count="19" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="817" height="504"/>
+      <xy x="20" y="20" width="817" height="530"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -56,7 +56,7 @@
       </component>
       <vspacer id="7c92">
         <constraints>
-          <grid row="17" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+          <grid row="18" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
             <preferred-size width="604" height="14"/>
           </grid>
         </constraints>
@@ -138,7 +138,7 @@
       </component>
       <grid id="8d228" binding="donatePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>
-          <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
+          <grid row="17" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
             <minimum-size width="20" height="20"/>
           </grid>
         </constraints>
@@ -223,6 +223,17 @@
         </constraints>
         <properties>
           <text value="Custom JDK home path (used as a backup when module's JDK resolving fails or is disabled):"/>
+        </properties>
+      </component>
+      <component id="b06b4" class="javax.swing.JCheckBox" binding="disableProcessDialog">
+        <constraints>
+          <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="259" height="18"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Disable VisualVM process error dialog"/>
+          <toolTipText value="Passes a generated config file as --source-config"/>
         </properties>
       </component>
     </children>

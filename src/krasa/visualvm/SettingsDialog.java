@@ -40,6 +40,7 @@ public class SettingsDialog {
 	private LinkLabel linkLabel;
 	private JPanel donatePanel;
 	private JCheckBox useModuleJdk;
+	private JCheckBox disableProcessDialog;
 
 	public SettingsDialog() {
 		super();
@@ -160,6 +161,7 @@ public class SettingsDialog {
 		tabIndex.setText(data.getTabIndex());
 		sourceConfig.setSelected(data.isSourceConfig());
 		useModuleJdk.setSelected(data.isUseModuleJdk());
+		disableProcessDialog.setSelected(data.isDisableProcessDialog());
 	}
 
 	public void getData(PluginSettings data) {
@@ -171,6 +173,7 @@ public class SettingsDialog {
 		data.setTabIndex(tabIndex.getText());
 		data.setSourceConfig(sourceConfig.isSelected());
 		data.setUseModuleJdk(useModuleJdk.isSelected());
+		data.setDisableProcessDialog(disableProcessDialog.isSelected());
 	}
 
 	public boolean isModified(PluginSettings data) {
@@ -187,6 +190,7 @@ public class SettingsDialog {
 			return true;
 		if (sourceConfig.isSelected() != data.isSourceConfig()) return true;
 		if (useModuleJdk.isSelected() != data.isUseModuleJdk()) return true;
+		if (disableProcessDialog.isSelected() != data.isDisableProcessDialog()) return true;
 		return false;
 	}
 }

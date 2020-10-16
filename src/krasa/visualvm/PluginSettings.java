@@ -12,6 +12,7 @@ public class PluginSettings {
 	private String tabIndex = "2";
 	private boolean sourceConfig = false;
 	private boolean useModuleJdk = true;
+	private boolean disableProcessDialog;
 
 
 	public String getVisualVmExecutable() {
@@ -90,5 +91,13 @@ public class PluginSettings {
 
 	public void setUseModuleJdk(final boolean useModuleJdk) {
 		this.useModuleJdk = useModuleJdk;
+	}
+
+	public boolean isDisableProcessDialog() {
+		return disableProcessDialog;
+	}
+
+	public void setDisableProcessDialog(final boolean disableProcessDialog) {
+		this.disableProcessDialog = disableProcessDialog;
 	}
 }
