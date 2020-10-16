@@ -40,6 +40,7 @@ import krasa.visualvm.ApplicationSettingsService;
 import krasa.visualvm.LogHelper;
 import krasa.visualvm.PluginSettings;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.File;
@@ -129,7 +130,8 @@ public final class VisualVMHelper {
 			cmds.add(idString);
 			if (sourceConfig) {
 				try {
-					addSourceConfig(project, cmds, module);
+					cmds.add("--source-config");
+					cmds.add(createSourceConfig(project, module).getAbsolutePath());
 				} catch (Throwable e) {
 					log.error(e);
 				}
@@ -148,7 +150,8 @@ public final class VisualVMHelper {
 		}
 	}
 
-	private static void addSourceConfig(Project project, List<String> cmds, Module runConfigurationModule) throws IOException {
+	@NotNull
+	private static File createSourceConfig(Project project, Module runConfigurationModule) throws IOException {
 		Properties props = new Properties();
 		props.setProperty("source-roots", SourceRoots.resolve(project, runConfigurationModule));
 
@@ -167,9 +170,7 @@ public final class VisualVMHelper {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
-		cmds.add("--source-config");
-		cmds.add(tempFile.getAbsolutePath());
+		return tempFile;
 	}
 
 
