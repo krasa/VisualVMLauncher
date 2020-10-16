@@ -155,7 +155,7 @@ public final class VisualVMHelper {
 		File ideExecutable = getIdeExecutable();
 		if (ideExecutable != null) {
 			if (ideExecutable.exists()) {
-				props.setProperty("source-viewer", ideExecutable.getAbsolutePath());
+				props.setProperty("source-viewer", "\"" + ideExecutable.getAbsolutePath() + "\" --line {line} {file}");
 			} else {
 				log.warn("Bin file not exists: " + ideExecutable.getAbsolutePath());
 			}
