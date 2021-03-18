@@ -33,7 +33,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import krasa.visualvm.ApplicationSettingsService;
@@ -42,7 +41,6 @@ import krasa.visualvm.PluginSettings;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -207,7 +205,6 @@ public final class VisualVMHelper {
 
 		public void run() throws IOException {
 			PluginSettings settings = ApplicationSettingsService.getInstance().getState();
-			boolean disableProcessDialog = settings.isDisableProcessErrorDialog();
 
 			List<String> cmd = new ArrayList<>(Arrays.asList(cmds));
 			if (StringUtils.isNotBlank(settings.getLaf())) {
@@ -218,38 +215,39 @@ public final class VisualVMHelper {
 			log.info("Starting VisualVM with parameters:" + cmd);
 
 			ProcessBuilder processBuilder = new ProcessBuilder(cmd);
-			if (disableProcessDialog) {
-				File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
-				file.createNewFile();
-				if (file.exists()) {
-					processBuilder.redirectErrorStream(true);
-					processBuilder.redirectOutput(file);
-				}
-			}
+			//todo does not work
+//			if (disableProcessDialog) {
+//				File file = new File(PathManager.getLogPath(), "visualVMLauncher.log");
+//				file.createNewFile();
+//				if (file.exists()) {
+//					processBuilder.redirectErrorStream(true);
+//					processBuilder.redirectOutput(file);
+//				}
+////			}
 			Process process = processBuilder.start();
-			if (!disableProcessDialog) {
-				process.toHandle().onExit().whenCompleteAsync((processHandle, throwable) -> accept(project, process, processHandle, throwable));
-			}
+//			if (!disableProcessDialog) {
+//				process.toHandle().onExit().whenCompleteAsync((processHandle, throwable) -> accept(project, process, processHandle, throwable));
+//			}
 		}
 
-		private static void accept(Project project, Process process, ProcessHandle processHandle, Throwable throwable) {
-			try {
-				if (!processHandle.isAlive()) {
-					if (process.exitValue() != 0) {
-						String err = new String(process.getErrorStream().readAllBytes(), "UTF-8");
-						if (StringUtils.isNotBlank(err)) {
-							String message = "VisualVM exited with code: " + process.exitValue() + ".\nError: " + err;
-							SwingUtilities.invokeLater(() ->
-								Messages.showErrorDialog(project, message, "VisualVM Launcher"));
-							log.warn(message);
-						}
-
-					}
-				}
-			} catch (Throwable e) {
-				log.warn(e);
-			}
-		}
+//		private static void accept(Project project, Process process, ProcessHandle processHandle, Throwable throwable) {
+//			try {
+//				if (!processHandle.isAlive()) {
+//					if (process.exitValue() != 0) {
+//						String err = new String(process.getErrorStream().readAllBytes(), "UTF-8");
+//						if (StringUtils.isNotBlank(err)) {
+//							String message = "VisualVM exited with code: " + process.exitValue() + ".\nError: " + err;
+//							SwingUtilities.invokeLater(() ->
+//								Messages.showErrorDialog(project, message, "VisualVM Launcher"));
+//							log.warn(message);
+//						}
+//
+//					}
+//				}
+//			} catch (Throwable e) {
+//				log.warn(e);
+//			}
+//		}
 
 	}
 

@@ -40,7 +40,6 @@ public class SettingsDialog {
 	private LinkLabel linkLabel;
 	private JPanel donatePanel;
 	private JCheckBox useModuleJdk;
-	private JCheckBox disableProcessDialog;
 	private JTextField laf;
 
 	public SettingsDialog() {
@@ -162,7 +161,6 @@ public class SettingsDialog {
 		tabIndex.setText(data.getTabIndex());
 		sourceConfig.setSelected(data.isSourceConfig());
 		useModuleJdk.setSelected(data.isUseModuleJdk());
-		disableProcessDialog.setSelected(data.isDisableProcessErrorDialog());
 		laf.setText(data.getLaf());
 	}
 
@@ -175,7 +173,6 @@ public class SettingsDialog {
 		data.setTabIndex(tabIndex.getText());
 		data.setSourceConfig(sourceConfig.isSelected());
 		data.setUseModuleJdk(useModuleJdk.isSelected());
-		data.setDisableProcessErrorDialog(disableProcessDialog.isSelected());
 		data.setLaf(laf.getText());
 	}
 
@@ -193,7 +190,6 @@ public class SettingsDialog {
 			return true;
 		if (sourceConfig.isSelected() != data.isSourceConfig()) return true;
 		if (useModuleJdk.isSelected() != data.isUseModuleJdk()) return true;
-		if (disableProcessDialog.isSelected() != data.isDisableProcessErrorDialog()) return true;
 		if (laf.getText() != null ? !laf.getText().equals(data.getLaf()) : data.getLaf() != null) return true;
 		return false;
 	}

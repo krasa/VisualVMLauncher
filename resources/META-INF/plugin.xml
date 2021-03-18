@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.18.201.000.0</version>
+	<version>1.19.201.000.0</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -14,6 +14,8 @@
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.19
+        <br>- rebuild for JDK 1.8, small improvements
         <br>1.18
         <br>- added VisualVM process error dialog instead of the log file - can be disabled in settings
         <br>- added --laf option

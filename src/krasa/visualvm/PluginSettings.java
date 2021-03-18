@@ -12,7 +12,6 @@ public class PluginSettings {
 	private String tabIndex = "2";
 	private boolean sourceConfig = false;
 	private boolean useModuleJdk = true;
-	private boolean disableProcessErrorDialog;
 	private String laf = "";
 
 
@@ -94,13 +93,6 @@ public class PluginSettings {
 		this.useModuleJdk = useModuleJdk;
 	}
 
-	public boolean isDisableProcessErrorDialog() {
-		return disableProcessErrorDialog;
-	}
-
-	public void setDisableProcessErrorDialog(final boolean disableProcessErrorDialog) {
-		this.disableProcessErrorDialog = disableProcessErrorDialog;
-	}
 
 	public String getLaf() {
 		return laf;
