@@ -54,6 +54,10 @@ public final class VisualVMHelper {
 	private static final Logger log = Logger.getInstance(VisualVMHelper.class.getName());
 
 	public static void startVisualVM(VisualVMContext vmContext, Project project, Object thisInstance) {
+		if (vmContext == null) {
+			log.warn("VisualVMContext is null");
+			return;
+		}
 		VisualVMHelper.openInVisualVM(vmContext.getAppId(), vmContext.getJdkPath(), vmContext.getModule(), project, thisInstance);
 	}
 

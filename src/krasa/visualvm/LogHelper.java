@@ -11,7 +11,6 @@ public class LogHelper {
 			if (thisInstance != null) {
 				simpleName = thisInstance.getClass().getSimpleName() + ": ";
 			}
-			System.out.println(simpleName + x);
 			log.debug(simpleName + x);
 		}
 	}

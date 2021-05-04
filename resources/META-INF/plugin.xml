@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.19.203.000.0</version>
+	<version>1.20.203.4204.0</version>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -21,6 +21,8 @@ Manage pull requests and conduct code reviews in your IDE with full source-tree 
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.20
+        <br>- NPE fix
         <br>1.19
         <br>- rebuild for JDK 1.8, small improvements
         <br>1.18
@@ -45,7 +47,7 @@ Manage pull requests and conduct code reviews in your IDE with full source-tree 
       ]]>
 	</change-notes>
 
-	<idea-version since-build="203.000"/>
+	<idea-version since-build="203.4204"/>
 
 	<project-components>
 	</project-components>
