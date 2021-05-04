@@ -64,6 +64,8 @@ Manage pull requests and conduct code reviews in your IDE with full source-tree 
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<notificationGroup id="VisualVMLauncher" displayType="BALLOON" isLogByDefault="true"/>
+
 		<executor implementation="krasa.visualvm.executor.RunVisualVMExecutor"/>
 		<programRunner implementation="krasa.visualvm.runner.RunVisualVMRunner"/>
 		<programRunner implementation="krasa.visualvm.runner.DebugVisualVMRunner"/>

@@ -24,9 +24,7 @@
  */
 package krasa.visualvm.integration;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
@@ -70,9 +68,8 @@ public final class VisualVMHelper {
 
 		String visualVmPath = state.getVisualVmExecutable();
 		if (!isValidPath(visualVmPath)) {
-			final Notification notification = new Notification("VisualVMLauncher", "",
-				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
-				NotificationType.ERROR);
+			NotificationGroup group = NotificationGroupManager.getInstance().getNotificationGroup("VisualVMLauncher");
+			Notification notification = group.createNotification("Path to VisualVM is not valid, path='" + visualVmPath + "'", NotificationType.ERROR);
 			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
 		} else {
 			try {
@@ -110,10 +107,9 @@ public final class VisualVMHelper {
 		}
 
 		if (!isValidPath(visualVmPath)) {
-			final Notification notification = new Notification("VisualVMLauncher", "",
-				"Path to VisualVM is not valid, path='" + visualVmPath + "'",
-				NotificationType.ERROR);
-			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
+			NotificationGroup group = NotificationGroupManager.getInstance().getNotificationGroup("VisualVMLauncher");
+			Notification myNotification = group.createNotification("Path to VisualVM is not valid, path='" + visualVmPath + "'", NotificationType.ERROR);
+			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(myNotification));
 		} else {
 			run(jdkHome, project, visualVmPath, idString, sourceConfig, module, thisInstance);
 		}
