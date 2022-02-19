@@ -1,6 +1,21 @@
 package krasa.visualvm;
 
-import com.intellij.ide.BrowserUtil;
+import static com.intellij.ide.BrowserUtil.browse;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.NumberFormat;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
+
+import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
+
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -11,18 +26,6 @@ import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.labels.LinkLabel;
-import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.text.NumberFormat;
 
 public class SettingsDialog {
 	private JTextField visualVmExecutable;
@@ -41,11 +44,14 @@ public class SettingsDialog {
 	private JPanel donatePanel;
 	private JCheckBox useModuleJdk;
 	private JTextField laf;
+	private LinkLabel link;
 
 	public SettingsDialog() {
 		super();
 		donatePanel.add(Donate.newDonateButton(donatePanel));
-
+		link.setListener((LinkLabel linkLabel1, Object o) -> {
+			browse(linkLabel1.getText());
+		}, null);
 		duration.setFormatterFactory(getDefaultFormatterFactory());
 		delayForStgartingVisualVM.setFormatterFactory(getDefaultFormatterFactory());
 
@@ -102,7 +108,7 @@ public class SettingsDialog {
 		});
 
 		linkLabel.setListener(
-				(aSource, aLinkData) -> BrowserUtil.browse((String) aLinkData),
+				(aSource, aLinkData) -> browse((String) aLinkData),
 				"https://visualvm.github.io/sourcessupport.html");
 	}
 

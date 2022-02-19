@@ -168,7 +168,7 @@
               <text value="VisualVM executable:"/>
             </properties>
           </component>
-          <component id="2fa2c" class="com.intellij.ui.components.labels.LinkLabel">
+          <component id="2fa2c" class="com.intellij.ui.components.labels.LinkLabel" binding="link">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
