@@ -1,21 +1,5 @@
 package krasa.visualvm;
 
-import static com.intellij.ide.BrowserUtil.browse;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.text.NumberFormat;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-
-import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
-
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -26,6 +10,18 @@ import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.labels.LinkLabel;
+import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
+import java.io.File;
+import java.text.NumberFormat;
+
+import static com.intellij.ide.BrowserUtil.browse;
 
 public class SettingsDialog {
 	private JTextField visualVmExecutable;
@@ -56,27 +52,17 @@ public class SettingsDialog {
 		delayForStgartingVisualVM.setFormatterFactory(getDefaultFormatterFactory());
 
 
-		browseButton.addActionListener(new ActionListener() {
+		browseButton.addActionListener(e -> browseForFile(visualVmExecutable));
+		browseJdkHome.addActionListener(e -> {
+			JavaSdk instance = com.intellij.openapi.projectRoots.impl.JavaSdkImpl.getInstance();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				browseForFile(visualVmExecutable);
-			}
-		});
-		browseJdkHome.addActionListener(new ActionListener() {
+			String text = jdkHome.getText();
+			final VirtualFile toSelect = StringUtils.isBlank(text) ? SdkConfigurationUtil.getSuggestedSdkRoot(instance) : LocalFileSystem.getInstance().findFileByPath(text);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JavaSdk instance = com.intellij.openapi.projectRoots.impl.JavaSdkImpl.getInstance();
-
-				String text = jdkHome.getText();
-				final VirtualFile toSelect = StringUtils.isBlank(text) ? SdkConfigurationUtil.getSuggestedSdkRoot(instance) : LocalFileSystem.getInstance().findFileByPath(text);
-
-				Project defaultProject = ProjectManager.getInstance().getDefaultProject();
-				VirtualFile file = FileChooser.chooseFile(instance.getHomeChooserDescriptor(), defaultProject, toSelect);
-				if (file != null) {
-					jdkHome.setText(file.getPath());
-				}
+			Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+			VirtualFile file = FileChooser.chooseFile(instance.getHomeChooserDescriptor(), defaultProject, toSelect);
+			if (file != null) {
+				jdkHome.setText(file.getPath());
 			}
 		});
 		visualVmExecutable.getDocument().addDocumentListener(new DocumentListener() {

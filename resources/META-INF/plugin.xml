@@ -1,7 +1,8 @@
 <idea-plugin version="2">
 	<id>VisualVMLauncher</id>
 	<name>VisualVM Launcher</name>
-	<version>1.20.203.4204.0</version>
+	<version>1.21.211.6085.0</version>
+	<idea-version since-build="211.6085.26"/>
 
 	<vendor url="https://github.com/krasa/VisualVMLauncher" email="vojta.krasa@gmail.com">Vojtech
 		Krasa
@@ -21,6 +22,8 @@ Manage pull requests and conduct code reviews in your IDE with full source-tree 
       ]]></description>
 
 	<change-notes><![CDATA[
+        <br>1.21
+        <br>- IntelliJ 2022 compatibility
         <br>1.20
         <br>- NPE fix
         <br>1.19
@@ -47,7 +50,6 @@ Manage pull requests and conduct code reviews in your IDE with full source-tree 
       ]]>
 	</change-notes>
 
-	<idea-version since-build="203.4204"/>
 
 	<project-components>
 	</project-components>
@@ -61,6 +63,14 @@ Manage pull requests and conduct code reviews in your IDE with full source-tree 
 				description="Start VisualVM with selectable JDK">
 			<add-to-group group-id="MainToolBar" anchor="last"/>
 		</action>
+		<!--		<action-->
+		<!--				id="krasa.visualvm.action.FocusVisualVMAction"-->
+		<!--				class="krasa.visualvm.action.FocusVisualVMAction"-->
+		<!--				icon="/krasa/visualvm/svg/console16.svg"-->
+		<!--				text="FocusVisualVMAction"-->
+		<!--				description="xxx">-->
+		<!--			<add-to-group group-id="MainToolBar" anchor="last"/>-->
+		<!--		</action>-->
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">

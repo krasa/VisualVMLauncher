@@ -39,11 +39,13 @@ import com.intellij.execution.impl.DefaultJavaProgramRunner;
 import com.intellij.execution.jar.JarApplicationConfiguration;
 import com.intellij.execution.remote.RemoteConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.target.TargetEnvironmentAwareRunProfileState;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import krasa.visualvm.MyConfigurable;
 import krasa.visualvm.executor.RunVisualVMExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.concurrency.Promise;
 
 public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 	private static final Logger log = Logger.getInstance(DebugVisualVMRunner.class.getName());
@@ -74,4 +76,10 @@ public class RunVisualVMRunner extends DefaultJavaProgramRunner {
 		return runContentDescriptor;
 	}
 
+	@Override
+	protected @NotNull Promise<RunContentDescriptor> doExecuteAsync(@NotNull TargetEnvironmentAwareRunProfileState state, @NotNull ExecutionEnvironment env) throws ExecutionException {
+		Promise<RunContentDescriptor> runContentDescriptorPromise = super.doExecuteAsync(state, env);
+		RunnerUtils.runVisualVM(this, env, state);
+		return runContentDescriptorPromise;
+	}
 }

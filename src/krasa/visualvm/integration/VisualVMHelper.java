@@ -33,6 +33,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.system.CpuArch;
 import krasa.visualvm.ApplicationSettingsService;
 import krasa.visualvm.LogHelper;
 import krasa.visualvm.PluginSettings;
@@ -175,7 +176,7 @@ public final class VisualVMHelper {
 	protected static File getIdeExecutable() {
 		String scriptName = ApplicationNamesInfo.getInstance().getScriptName();
 		if (SystemInfo.isWindows) {
-			String bits = SystemInfo.is64Bit ? "64" : "";
+			String bits = CpuArch.CURRENT.width == 64 ? "64" : "";
 			return new File(PathManager.getBinPath(), scriptName + bits + ".exe");
 		} else if (SystemInfo.isMac) {
 			File appDir = new File(PathManager.getHomePath(), "MacOS");
@@ -251,5 +252,21 @@ public final class VisualVMHelper {
 
 	}
 
+	public static void executeVisualVM(Project project, @NotNull String commandLineAction) {
+		PluginSettings state = ApplicationSettingsService.getInstance().getState();
+//todo needs sdk
+		String visualVmPath = state.getVisualVmExecutable();
+		if (!isValidPath(visualVmPath)) {
+			NotificationGroup group = NotificationGroupManager.getInstance().getNotificationGroup("VisualVMLauncher");
+			Notification notification = group.createNotification("Path to VisualVM is not valid, path='" + visualVmPath + "'", NotificationType.ERROR);
+			ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(notification));
+		} else {
+			try {
+				new VisualVMProcess(project, visualVmPath, commandLineAction).run();
+			} catch (IOException e) {
+				throw new RuntimeException("visualVmPath=" + visualVmPath + "; commandLineAction=" + commandLineAction, e);
+			}
+		}
 
+	}
 }

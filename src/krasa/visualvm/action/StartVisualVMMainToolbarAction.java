@@ -35,6 +35,7 @@ public class StartVisualVMMainToolbarAction extends DumbAwareAction {
 
 		DefaultActionGroup defaultActionGroup = new DefaultActionGroup();
 		defaultActionGroup.add(new MyDumbAwareAction("No JDK (system default)", null));
+//		defaultActionGroup.add(new FocusVisualVMAction("Focus VisualVM", null, null));
 		defaultActionGroup.add(new Separator());
 
 		Set<String> homes = jdkHomes();
