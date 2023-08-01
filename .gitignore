@@ -12,3 +12,8 @@ rebel.xml
 *.ipr
 *.iws
 VisualVMLauncher.jar
+
+.gradle
+.idea
+.qodana
+build
