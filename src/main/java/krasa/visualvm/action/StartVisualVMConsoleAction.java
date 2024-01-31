@@ -1,6 +1,5 @@
 package krasa.visualvm.action;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import krasa.visualvm.ApplicationSettingsService;
@@ -14,7 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StartVisualVMConsoleAction extends AnAction {
+public class StartVisualVMConsoleAction extends MyDumbAwareAction {
 	private VisualVMContext visualVMContext;
 	private boolean postConstructContextSet;
 	private long created;

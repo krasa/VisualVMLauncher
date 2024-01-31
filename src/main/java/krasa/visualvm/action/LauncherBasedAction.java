@@ -1,14 +1,13 @@
 package krasa.visualvm.action;
 
-import javax.swing.*;
-
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ProcessProxyFactory;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 
-public abstract class LauncherBasedAction extends AnAction {
+import javax.swing.*;
+
+public abstract class LauncherBasedAction extends MyDumbAwareAction {
 	protected final ProcessHandler myProcessHandler;
 
 	LauncherBasedAction(String text, String description, Icon icon, ProcessHandler processHandler) {

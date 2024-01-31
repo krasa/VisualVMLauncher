@@ -25,7 +25,7 @@ import java.awt.event.InputEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StartVisualVMMainToolbarAction extends DumbAwareAction {
+public class StartVisualVMMainToolbarAction extends MyDumbAwareAction {
 
 	public void actionPerformed(AnActionEvent e) {
 		boolean ok = checkVisualVmExecutable();

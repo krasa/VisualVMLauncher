@@ -1,16 +1,13 @@
 package krasa.visualvm.action;
 
-import javax.swing.*;
-
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.util.NlsActions;
+import krasa.visualvm.integration.VisualVMHelper;
 import org.jetbrains.annotations.Nullable;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.util.NlsActions;
+import javax.swing.*;
 
-import krasa.visualvm.integration.VisualVMHelper;
-
-public class FocusVisualVMAction extends DumbAwareAction {
+public class FocusVisualVMAction extends MyDumbAwareAction {
 	public FocusVisualVMAction() {
 	}
 
